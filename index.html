@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>gotchoo · Say it so it clicks</title>
+<meta name="description" content="gotchoo is your cross-cultural workplace coach. You know what you want to say. We’ll help you say it so it clicks with the person you’re talking to.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20role%3D%22img%22%20aria-label%3D%22gotchoo%20logo%22%3E%20%20%3Cdefs%3E%20%20%20%20%3ClinearGradient%20id%3D%22gch-g%22%20x1%3D%222%22%20y1%3D%2252%22%20x2%3D%2262%22%20y2%3D%226%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23E35AA8%22%2F%3E%3Cstop%20offset%3D%22.55%22%20stop-color%3D%22%23B04DE0%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237344F2%22%2F%3E%20%20%20%20%3C%2FlinearGradient%3E%20%20%3C%2Fdefs%3E%20%20%3Cg%20transform%3D%22translate%280%203%29%22%3E%20%20%20%20%3Cpath%20d%3D%22M8%201.2%20H32.4%20A6.8%206.8%200%200%201%2039.2%208%20V28%20A6.8%206.8%200%200%201%2032.4%2034.8%20H15%20L2.4%2043%20V8%20A6.8%206.8%200%200%201%208%201.2%20Z%22%20fill%3D%22url%28%23gch-g%29%22%2F%3E%20%20%20%20%3Cpath%20d%3D%22M27.4%2013.8%20H56%20A6.8%206.8%200%200%201%2062.8%2020.6%20V59.5%20L48.5%2047.8%20H27.4%20A6.8%206.8%200%200%201%2020.6%2041%20V20.6%20A6.8%206.8%200%200%201%2027.4%2013.8%20Z%22%20fill%3D%22url%28%23gch-g%29%22%20stroke%3D%22%23FFFFFF%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22%20paint-order%3D%22stroke%22%2F%3E%20%20%3C%2Fg%3E%3C%2Fsvg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Literata:ital,opsz,wght@1,7..72,400&display=swap" rel="stylesheet">
+<script src="config.js" onerror="void 0"></script>
+<style>
+:root{
+  --ink:#173440; --body:#3B5260; --muted:#5A6D78; --line:#DCE4E8; --surf:#F5F8F8; --white:#FFFFFF;
+  --vio:#9053E9; --vio-d:#6A3DD0; --vio-t:#F2ECFE;
+  --pink:#EE86AC; --pink-h:#E8709C; --pink-d:#B83468; --pink-t:#FDEBF2;
+  --mint:#97FCCE; --mint-d:#0D6B55; --mint-t:#E4FDF3; --slate:#2B3F56;
+  --sans:Outfit,'Segoe UI',system-ui,sans-serif; --word:"Bricolage Grotesque",Outfit,sans-serif; --voice:Literata,Georgia,serif;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--white);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--vio);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+a{color:var(--vio-d)}
+
+/* layout */
+.app{display:grid;grid-template-columns:minmax(0,1fr);min-height:100vh}
+.rail,.mappanel{display:none}
+.main{display:flex;flex-direction:column;min-height:100vh;min-width:0}
+.mhead{position:sticky;top:0;z-index:5;background:var(--white);padding:12px 20px;display:flex;flex-direction:column;gap:12px}
+.mhead.shadow{box-shadow:0 1px 0 var(--line)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--word);font-weight:800;font-size:22px;color:#1B2A3A;text-decoration:none;letter-spacing:-.02em;font-variation-settings:"opsz" 96}
+.brand img{width:26px;height:26px}
+.iconbtn{width:44px;height:44px;border:0;background:transparent;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.iconbtn.hide{visibility:hidden}
+.progress{display:flex;gap:6px}
+.progress span{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.progress span.on{background:var(--vio)}
+.steplabel{font-size:14px;font-weight:600;color:var(--muted);margin-top:8px}
+.view{flex:1;width:100%;max-width:760px;margin:0 auto;padding:6px 20px 28px}
+.cta{position:sticky;bottom:0;z-index:5;background:var(--white);border-top:1px solid var(--line);padding:14px 20px calc(18px + env(safe-area-inset-bottom,0px))}
+.cta[hidden]{display:none}
+.cta-in{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.cta .sub{text-align:center;font-size:14px;color:var(--muted)}
+@media (min-width:1024px){
+  .mhead{padding:22px 40px 8px;gap:20px}
+  .mhead .row{max-width:none}
+  .brand{font-size:22px}.brand img{width:30px;height:30px}
+  .progwrap{width:100%;max-width:860px;margin:0 auto;padding:0 48px}
+  .view{max-width:860px;margin:0 auto;padding:28px 48px 28px}
+  .app.nochrome .view{max-width:1100px;padding:40px 56px}
+  .cta{position:static;border-top:0;background:transparent;padding:0 0 40px}
+  .cta-in{max-width:860px;margin:0 auto;padding:22px 48px 0;flex-direction:row;align-items:center;justify-content:flex-end;gap:16px;border-top:1px solid var(--line)}
+  .cta .btn{min-width:240px}
+  .deskcoach{display:inline-flex!important}
+}
+.setupgrid{display:block}.deskmap{display:none}
+@media (min-width:1024px){
+  .app.wide .view,.app.wide .progwrap,.app.wide .cta-in{max-width:1180px}
+  .setupgrid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:40px;align-items:start}
+  .setupgrid .grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .setupgrid .mapcard{display:none}
+  .deskmap{display:block;padding:22px 24px 16px;border-radius:20px;background:var(--surf);margin-top:14px}
+  .deskmap h2{font-weight:600;font-size:22px}
+}
+.deskcoach{display:none;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap}
+
+/* rail */
+.rail .brand{font-size:24px}.rail .brand img{width:34px;height:34px}
+.rail .tag{font-size:14px;font-weight:600;color:var(--vio-d);margin-top:6px}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.rail li button{width:100%;display:flex;align-items:center;gap:14px;min-height:48px;padding:8px 12px;border:0;border-radius:12px;background:transparent;text-align:left;font-weight:600;color:var(--muted);cursor:pointer}
+.rail li button:disabled{cursor:default}
+.rail li button.cur{background:var(--vio-t);color:var(--ink);font-weight:700}
+.rail li button.done{color:var(--ink)}
+.rdot{width:32px;height:32px;border-radius:50%;border:2px solid var(--line);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex:none}
+.cur .rdot,.done .rdot{background:var(--vio);border-color:var(--vio);color:#fff}
+.rail .coachlink{margin-top:auto;display:flex;align-items:center;gap:12px;min-height:56px;padding:0 16px;border-radius:14px;border:1.5px solid var(--line);color:var(--ink);text-decoration:none;font-weight:700;background:var(--white);cursor:pointer;text-align:left}
+.rail .coachlink small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
+
+/* type */
+.q{display:flex;flex-direction:column;gap:8px;margin:14px 0 18px}
+.q h1{font-weight:600;font-size:26px;line-height:1.25}
+.q p{color:var(--body);font-size:16px}
+.kicker{font-size:14px;font-weight:700;color:var(--vio-d)}
+.muted{color:var(--muted)}
+@media (min-width:1024px){ .q h1{font-size:38px;line-height:1.15} .q p{font-size:18px} }
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 30px;border-radius:999px;border:0;background:var(--pink);color:var(--ink);font-weight:700;font-size:18px;cursor:pointer;text-decoration:none;transition:background .15s}
+.btn:hover{background:var(--pink-h)}
+.btn:disabled{background:#E6EAEC;color:#8A9AA2;cursor:not-allowed}
+.btn.ghost{background:var(--white);border:1.5px solid var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.small{min-height:44px;padding:0 18px;font-size:15px}
+.link{background:none;border:0;padding:0;color:var(--vio-d);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+/* welcome */
+.hello h1{font-weight:600;font-size:44px;line-height:1.05}
+.hello p{font-size:18px;color:var(--body);margin-top:10px}
+.hello .eyebrow{font-size:15px;font-weight:700;color:var(--vio-d);margin:0 0 10px}
+.hello .ask{font-weight:600;font-size:26px;line-height:1.2;color:var(--vio-d);margin-top:6px}
+.choose{font-weight:700;margin:24px 0 12px}
+.options{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+@media (min-width:1024px){ .hello h1{font-size:72px} .hello p{font-size:22px;max-width:34em} .hello .eyebrow{font-size:15px;font-weight:700;color:var(--vio-d);margin:0 0 10px}
+.hello .ask{font-size:40px} .options{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px} }
+.opt{display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:20px;border:1.5px solid var(--line);background:var(--white);box-shadow:0 2px 10px rgba(23,52,64,.06);text-align:left;cursor:pointer;color:var(--ink)}
+.opt.primary{border:2px solid var(--vio)}
+.opt .ic{width:48px;height:48px;border-radius:14px;background:var(--vio-t);display:flex;align-items:center;justify-content:center}
+.opt.primary .ic{background:var(--mint)}
+.opt .t{font-weight:600;font-size:22px;line-height:1.2}
+.opt .d{color:var(--body);font-size:16px}
+.opt .f{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+.opt .f span:first-child{font-size:14px;color:var(--muted)}
+.opt .pill{display:inline-flex;align-items:center;min-height:44px;padding:0 20px;border-radius:999px;border:1.5px solid var(--line);font-weight:700}
+.opt.primary .pill{background:var(--pink);border-color:var(--pink)}
+.lastplan{margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left;cursor:pointer;min-height:52px}
+
+/* tiles & chips */
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:1024px){ .grid2{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px} }
+.tile{display:flex;align-items:center;gap:12px;min-height:64px;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;background:var(--white);box-shadow:0 1px 2px rgba(23,52,64,.06);cursor:pointer;text-align:left;color:var(--ink)}
+.tile:hover{border-color:#B5C3CA}
+.tile[aria-pressed="true"]{border:2px solid var(--vio);background:var(--vio-t);padding:9.5px 11.5px}
+.badge{width:38px;height:38px;flex:none;border-radius:50%;background:var(--vio-t);color:var(--vio-d);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.tile[aria-pressed="true"] .badge{background:var(--white)}
+.tile .name{flex:1;min-width:0;font-size:17px;font-weight:600;line-height:1.25}
+.tile .hint{display:block;font-size:14px;font-weight:400;color:var(--muted)}
+.tick{display:none;flex:none}
+[aria-pressed="true"] > .tick{display:block}
+.tile.full{grid-column:1/-1;border-style:dashed}
+@media (max-width:420px){ .grid2 .tile{gap:10px;padding:10px} .grid2 .badge{width:34px;height:34px;font-size:13px} .grid2 .tile .name{font-size:16px} }
+.scen{flex-direction:column;align-items:flex-start;min-height:118px;padding:14px;position:relative;gap:10px}
+.scen[aria-pressed="true"]{padding:13.5px}
+.scen .ico{width:40px;height:40px;border-radius:12px;background:var(--vio-t);display:flex;align-items:center;justify-content:center}
+.scen[aria-pressed="true"] .ico{background:var(--white)}
+.scen .tick{position:absolute;top:12px;right:12px}
+.sec{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+.sec h2{font-weight:600;font-size:20px}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px}
+.wchip{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--white);font-weight:600;cursor:pointer}
+.wchip b{font-size:12px;color:var(--vio-d)}
+.wchip[aria-pressed="true"]{border:2px solid var(--vio);background:var(--vio-t);padding:0 13px}
+.wchip.more{border-style:dashed;color:var(--vio-d)}
+.mapcard{margin-top:22px;display:flex;align-items:center;gap:14px;padding:16px;border-radius:16px;background:var(--surf);border:0;width:100%;text-align:left;cursor:pointer;color:var(--ink)}
+.mapcard .mm{width:44px;height:44px;flex:none;border-radius:12px;background:var(--white);display:flex;flex-direction:column;justify-content:center;gap:6px;padding:0 8px}
+.mapcard .mm i{position:relative;height:2px;background:var(--line)}
+.mapcard .mm i::after{content:"";position:absolute;top:-3px;left:var(--p);width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--vio)}
+.mapcard .tx{flex:1}.mapcard .tx b{display:block}.mapcard .tx span{font-size:14px;color:var(--muted)}
+.mapcard .pill{flex:none;display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--white);font-weight:700;font-size:14px}
+
+/* map sliders */
+.legend{display:flex;gap:18px;flex-wrap:wrap;padding:12px 14px;border-radius:12px;background:var(--surf);font-size:14px;color:var(--body)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.you{width:14px;height:14px;border-radius:50%;background:var(--vio);box-shadow:0 0 0 1.5px var(--vio-d)}
+.dia{width:11px;height:11px;background:var(--slate);transform:rotate(45deg)}
+.dim{padding:14px 0;border-top:1px solid var(--line)}
+.dim:first-child{border-top:0}
+.dimhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dimhead label{font-weight:700}
+.tag{font-size:13px;font-weight:700;padding:2px 10px;border-radius:999px}
+.tag.gap{background:var(--pink-t);color:var(--pink-d)}
+.tag.adj{background:var(--mint-t);color:var(--mint-d)}
+.track{position:relative;height:44px}
+.track .ln{position:absolute;left:14px;right:14px;top:20px;height:4px;border-radius:2px;background:var(--line)}
+.track .wd{position:absolute;top:14px;width:16px;height:16px;margin-left:-8px;background:var(--slate);transform:rotate(45deg);border-radius:2px;pointer-events:none}
+.track input{position:absolute;inset:0;width:100%;height:44px;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer}
+.track input::-webkit-slider-runnable-track{height:44px;background:transparent}
+.track input::-moz-range-track{height:44px;background:transparent}
+.track input::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--vio);border:3px solid #fff;box-shadow:0 0 0 1.5px var(--vio-d),0 2px 6px rgba(106,61,208,.3);margin-top:8px}
+.track input::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--vio);border:3px solid #fff;box-shadow:0 0 0 1.5px var(--vio-d)}
+.ends{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+
+/* story */
+textarea.big{width:100%;min-height:150px;padding:14px 16px;border:2px solid var(--line);border-radius:14px;background:var(--white);font-size:17px;line-height:1.5;resize:vertical}
+textarea.big:focus{border-color:var(--vio);outline:none;box-shadow:0 0 0 3px var(--vio-t)}
+.count{font-size:13px;color:var(--muted);text-align:right}
+fieldset{border:0;margin:0;padding:0}
+legend{font-weight:700;padding:0;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;width:1px;height:1px}
+.chip span{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--white);font-size:15px;font-weight:600;cursor:pointer}
+.chip input:checked + span{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip input:focus-visible + span{outline:3px solid var(--vio);outline-offset:2px}
+details.tailor{border:1.5px solid var(--line);border-radius:14px;padding:0 16px}
+details.tailor summary{min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none}
+details.tailor summary::-webkit-details-marker{display:none}
+details.tailor .in{display:flex;flex-direction:column;gap:18px;padding:4px 0 18px}
+
+/* loop + observe */
+.loop{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.loop li{padding:3px 10px;border-radius:999px;font-weight:600;font-size:13px;color:var(--muted)}
+.loop li.on{background:var(--vio-t);color:var(--vio-d);font-weight:700}
+.loop li.ar{padding:0;color:#B9C6CC}
+.space .loop li{color:#9AAFB8}.space .loop li.on{background:rgba(255,255,255,.14);color:#fff}
+.space{position:relative;overflow:hidden;border-radius:20px;background:var(--ink);color:#fff;padding:24px 22px;display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.space svg.motif{position:absolute;right:-60px;top:-60px}
+.space > *:not(svg){position:relative}
+.space h1{font-weight:600;font-size:24px;line-height:1.3}
+.space p{color:#D5DEE2;font-size:15px}
+.bars{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:18px}
+.bars .r{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.bars .r span{font-size:14px;color:var(--muted);text-align:right}
+.bar{height:10px;border-radius:5px;background:var(--surf);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:5px;transform-origin:left;animation:grow .8s ease-out both}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.status{margin-top:24px;padding:16px;border-radius:14px;border:1.5px solid var(--line);display:flex;align-items:center;gap:14px}
+.spin{animation:spin 1s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error{color:#9B2C1E}
+.demo{margin-top:14px;padding:10px 14px;border-radius:12px;background:var(--mint-t);color:var(--mint-d);font-size:14px;font-weight:600}
+
+/* plan */
+.plan-top{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.plan-title{font-weight:600;font-size:27px;line-height:1.2}
+@media (min-width:1024px){ .plan-title{font-size:38px} }
+.why{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.why li{padding:5px 12px;border-radius:999px;font-weight:700;font-size:14px;background:var(--t);color:var(--c)}
+.c0{--c:var(--vio-d);--t:var(--vio-t)} .c1{--c:var(--mint-d);--t:var(--mint-t)} .c2{--c:var(--pink-d);--t:var(--pink-t)}
+.gtabs{margin-top:16px;padding:4px;border-radius:14px;background:var(--surf);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.gtabs button{min-height:48px;min-width:0;border:0;border-radius:10px;background:transparent;font-weight:600;font-size:14px;color:var(--body);cursor:pointer;padding:0 4px;line-height:1.2}
+.gtabs button[aria-selected="true"]{background:var(--white);box-shadow:0 1px 3px rgba(23,52,64,.12);color:var(--c);font-weight:700}
+.gcards{margin-top:14px;display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.gcard{padding:20px;border-radius:18px;border:1.5px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.gcard.off{display:none}
+@media (min-width:1024px){ .gtabs{display:none} .gcards{grid-template-columns:repeat(3,minmax(0,1fr))} .gcard.off{display:flex} .gcard{border-top:5px solid var(--c)} }
+.gcard h2{font-weight:600;font-size:19px}
+.gmeta{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.mini{position:relative;height:18px}
+.mini .ml{position:absolute;left:0;right:0;top:8px;height:3px;border-radius:2px;background:var(--line)}
+.mini .md{position:absolute;top:4px;width:11px;height:11px;margin-left:-5.5px;background:var(--slate);transform:rotate(45deg)}
+.mini .my{position:absolute;top:1px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--vio);border:2px solid #fff;box-shadow:0 0 0 1px var(--vio-d)}
+.lbl{font-size:14px;font-weight:700;color:var(--c);margin-bottom:2px}
+.gcard .txt{font-size:16px;color:var(--body)}
+.say{padding:14px 16px;border-radius:14px;background:var(--t);display:flex;flex-direction:column;gap:8px}
+.say .line{font-family:var(--voice);font-style:italic;font-size:19px;line-height:1.35;color:var(--ink)}
+.watch{display:flex;gap:10px;align-items:flex-start;font-size:15px;color:var(--body)}
+.week{margin-top:26px;display:flex;flex-direction:column;gap:12px}
+.week h2{font-weight:600;font-size:19px}
+.wgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+@media (min-width:1024px){ .wgrid{grid-template-columns:repeat(3,minmax(0,1fr))} }
+.wcard{padding:16px;border-radius:14px}
+.wcard.exp{--c:var(--mint-d);background:var(--mint-t)} .wcard.ref{--c:var(--pink-d);background:var(--pink-t)} .wcard.saf{--c:var(--vio-d);background:var(--surf)}
+.wcard textarea{width:100%;margin-top:10px;min-height:70px;padding:10px 12px;border:1px solid rgba(23,52,64,.15);border-radius:10px;background:#fff;resize:vertical}
+.wi{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line)}
+.rowlink{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:0 18px;border-radius:14px;border:1.5px solid var(--line);color:var(--ink);font-weight:700;background:#fff;cursor:pointer;width:100%;text-align:left}
+.hr{padding:12px 16px;border-radius:12px;border:1px solid var(--line);font-size:15px;color:var(--body)}
+.small-status{font-size:14px;color:var(--muted);min-height:1.4em}
+
+/* chat */
+.chatwrap{display:flex;flex-direction:column;gap:14px}
+.log{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:18px;background:var(--surf);min-height:300px}
+.bub{max-width:88%;padding:14px 16px;border-radius:16px 16px 16px 4px;background:#fff;border:1px solid var(--line);font-size:15.5px;color:var(--body)}
+.bub p{margin:0 0 8px}.bub p:last-child{margin:0}
+.bub ul{margin:0 0 8px;padding-left:20px}
+.bub.me{align-self:flex-end;border-radius:16px 16px 4px 16px;background:var(--vio-d);border-color:var(--vio-d);color:#fff;font-size:16px}
+.bub strong{color:var(--ink)} .bub strong.k1{color:var(--vio-d)} .bub strong.k2{color:var(--pink-d)} .bub strong.k3{color:var(--mint-d)}
+.bub q{font-family:var(--voice);font-style:italic;color:var(--ink);quotes:"“" "”"}
+.composer{display:flex;gap:10px;align-items:flex-end}
+.composer textarea{flex:1;min-height:52px;max-height:160px;padding:13px 18px;border:1.5px solid var(--line);border-radius:26px;resize:none;background:#fff}
+.composer textarea:focus{border-color:var(--vio);outline:none}
+.send{width:52px;height:52px;border-radius:50%;border:0;background:var(--pink);cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none}
+.send:disabled{background:#E6EAEC;cursor:not-allowed}
+.thinking{display:inline-flex;align-items:center;gap:10px;color:var(--muted)}
+.pulse{width:12px;height:12px;border-radius:50%;background:var(--vio);animation:pl 1s ease-in-out infinite}
+@keyframes pl{50%{transform:scale(.6);opacity:.6}}
+.qchips{display:flex;gap:8px;flex-wrap:wrap}
+.qchips button{min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:14px;cursor:pointer}
+
+/* coach start */
+.tips{padding:18px;border-radius:16px;background:var(--surf);display:flex;flex-direction:column;gap:12px}
+.tips ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.tips li{display:flex;gap:12px;align-items:flex-start}
+.tips .n{width:26px;height:26px;flex:none;border-radius:50%;background:var(--mint);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+.examples{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+@media (min-width:1024px){ .coachgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:24px;align-items:start} .examples{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.ex{display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:14px;border:1.5px solid var(--line);background:#fff;text-align:left;cursor:pointer;box-shadow:0 1px 2px rgba(23,52,64,.06)}
+.ex:hover{border-color:#B5C3CA}
+.ex .tg{align-self:flex-start;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--vio-t);color:var(--vio-d)}
+
+/* map panel */
+.mappanel h2{font-weight:600;font-size:17px}
+.mappanel .r2{display:flex;flex-direction:column;gap:4px}
+.mappanel .h2r{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
+.mappanel ol{margin:0;padding-left:20px;font-size:14px;color:var(--body)}
+.note{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="rail" aria-label="Progress">
+    <div>
+      <a class="brand" href="#" data-home><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20role%3D%22img%22%20aria-label%3D%22gotchoo%20logo%22%3E%20%20%3Cdefs%3E%20%20%20%20%3ClinearGradient%20id%3D%22gch-g%22%20x1%3D%222%22%20y1%3D%2252%22%20x2%3D%2262%22%20y2%3D%226%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23E35AA8%22%2F%3E%3Cstop%20offset%3D%22.55%22%20stop-color%3D%22%23B04DE0%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237344F2%22%2F%3E%20%20%20%20%3C%2FlinearGradient%3E%20%20%3C%2Fdefs%3E%20%20%3Cg%20transform%3D%22translate%280%203%29%22%3E%20%20%20%20%3Cpath%20d%3D%22M8%201.2%20H32.4%20A6.8%206.8%200%200%201%2039.2%208%20V28%20A6.8%206.8%200%200%201%2032.4%2034.8%20H15%20L2.4%2043%20V8%20A6.8%206.8%200%200%201%208%201.2%20Z%22%20fill%3D%22url%28%23gch-g%29%22%2F%3E%20%20%20%20%3Cpath%20d%3D%22M27.4%2013.8%20H56%20A6.8%206.8%200%200%201%2062.8%2020.6%20V59.5%20L48.5%2047.8%20H27.4%20A6.8%206.8%200%200%201%2020.6%2041%20V20.6%20A6.8%206.8%200%200%201%2027.4%2013.8%20Z%22%20fill%3D%22url%28%23gch-g%29%22%20stroke%3D%22%23FFFFFF%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22%20paint-order%3D%22stroke%22%2F%3E%20%20%3C%2Fg%3E%3C%2Fsvg%3E" alt="">gotchoo</a>
+      <p class="tag">Say it so it clicks.</p>
+    </div>
+    <ol id="railSteps"></ol>
+    <button class="coachlink" type="button" id="railCoach">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6A3DD0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8"/><path d="M8 12h5"/></svg>
+      <span>Ask the coach<small>Quick questions, any time</small></span>
+    </button>
+  </aside>
+
+  <main class="main">
+    <header class="mhead" id="mhead">
+      <div class="row">
+        <button class="iconbtn" id="backBtn" type="button" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#173440" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <a class="brand" href="#" data-home><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20role%3D%22img%22%20aria-label%3D%22gotchoo%20logo%22%3E%20%20%3Cdefs%3E%20%20%20%20%3ClinearGradient%20id%3D%22gch-g%22%20x1%3D%222%22%20y1%3D%2252%22%20x2%3D%2262%22%20y2%3D%226%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23E35AA8%22%2F%3E%3Cstop%20offset%3D%22.55%22%20stop-color%3D%22%23B04DE0%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237344F2%22%2F%3E%20%20%20%20%3C%2FlinearGradient%3E%20%20%3C%2Fdefs%3E%20%20%3Cg%20transform%3D%22translate%280%203%29%22%3E%20%20%20%20%3Cpath%20d%3D%22M8%201.2%20H32.4%20A6.8%206.8%200%200%201%2039.2%208%20V28%20A6.8%206.8%200%200%201%2032.4%2034.8%20H15%20L2.4%2043%20V8%20A6.8%206.8%200%200%201%208%201.2%20Z%22%20fill%3D%22url%28%23gch-g%29%22%2F%3E%20%20%20%20%3Cpath%20d%3D%22M27.4%2013.8%20H56%20A6.8%206.8%200%200%201%2062.8%2020.6%20V59.5%20L48.5%2047.8%20H27.4%20A6.8%206.8%200%200%201%2020.6%2041%20V20.6%20A6.8%206.8%200%200%201%2027.4%2013.8%20Z%22%20fill%3D%22url%28%23gch-g%29%22%20stroke%3D%22%23FFFFFF%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22%20paint-order%3D%22stroke%22%2F%3E%20%20%3C%2Fg%3E%3C%2Fsvg%3E" alt="">gotchoo</a>
+        <span id="headRight" style="min-width:44px;display:flex;justify-content:flex-end"></span>
+      </div>
+      <div class="progwrap" id="progWrap">
+        <div class="progress" id="progress" role="progressbar" aria-valuemin="1" aria-valuemax="5"></div>
+        <div class="steplabel" id="stepLabel"></div>
+      </div>
+    </header>
+    <section class="view" id="view" aria-live="polite"></section>
+    <footer class="cta" id="cta"><div class="cta-in"><button class="btn" type="button" id="ctaBtn">Continue</button><p class="sub" id="ctaSub" hidden></p></div></footer>
+  </main>
+
+  <aside class="mappanel" id="mappanel" aria-label="Your map"></aside>
+</div>
+
+<script>
+(() => {
+  // ================= DATA =================
+  const DIMS = [
+    {k:"communicating_low_to_high_context", name:"Communicating", lo:"Explicit", hi:"Implicit"},
+    {k:"evaluating_direct_to_indirect", name:"Feedback", lo:"Direct", hi:"Indirect"},
+    {k:"persuading_principles_to_applications", name:"Persuading", lo:"Principles first", hi:"Examples first"},
+    {k:"leading_egalitarian_to_hierarchical", name:"Leading", lo:"Egalitarian", hi:"Hierarchical"},
+    {k:"deciding_consensual_to_topdown", name:"Deciding", lo:"Consensus", hi:"Top-down"},
+    {k:"trusting_task_to_relationship", name:"Trusting", lo:"Task-based", hi:"Relationship-based"},
+    {k:"disagreeing_confrontational_to_avoids", name:"Disagreeing", lo:"Open debate", hi:"Avoids conflict"},
+    {k:"scheduling_linear_to_flexible", name:"Scheduling", lo:"Linear time", hi:"Flexible time"},
+  ];
+  const CSV_FALLBACK = `Country,communicating_low_to_high_context,evaluating_direct_to_indirect,persuading_principles_to_applications,leading_egalitarian_to_hierarchical,deciding_consensual_to_topdown,trusting_task_to_relationship,disagreeing_confrontational_to_avoids,scheduling_linear_to_flexible
+United States,2,3,5,3,5,2,4,2
+Brazil,5,5,4,5,4,6,5,5
+Japan,6,6,4,6,5,5,6,4
+Germany,3,2,3,3,3,2,3,2
+France,4,3,2,4,4,3,3,3
+India,5,5,4,5,5,4,5,5
+China,6,6,4,6,5,5,6,4
+Mexico,5,5,4,5,5,5,5,5
+Netherlands,2,2,4,2,3,2,3,2
+Russia,4,3,3,5,5,4,4,4`;
+  let WEIGHTS = {
+    "meeting":{communicating_low_to_high_context:1.3,deciding_consensual_to_topdown:1.3,disagreeing_confrontational_to_avoids:1.2,persuading_principles_to_applications:1.1,scheduling_linear_to_flexible:1.1},
+    "feedback":{evaluating_direct_to_indirect:1.5,disagreeing_confrontational_to_avoids:1.3,communicating_low_to_high_context:1.2},
+    "1:1":{leading_egalitarian_to_hierarchical:1.4,evaluating_direct_to_indirect:1.2,trusting_task_to_relationship:1.2},
+    "email":{communicating_low_to_high_context:1.5,scheduling_linear_to_flexible:1.2,persuading_principles_to_applications:1.1},
+    "negotiation":{persuading_principles_to_applications:1.3,disagreeing_confrontational_to_avoids:1.3,trusting_task_to_relationship:1.3,deciding_consensual_to_topdown:1.2},
+    "onboarding":{trusting_task_to_relationship:1.3,leading_egalitarian_to_hierarchical:1.2,scheduling_linear_to_flexible:1.2,communicating_low_to_high_context:1.1},
+    "social":{trusting_task_to_relationship:1.5,communicating_low_to_high_context:1.2},
+  };
+  const CODES = {"United States":"US","Brazil":"BR","Japan":"JP","Germany":"DE","France":"FR","India":"IN","China":"CN","Mexico":"MX","Netherlands":"NL","Russia":"RU"};
+  const SCENARIOS = [
+    {v:"meeting",name:"Meeting",hint:"Updates, decisions",icon:'<path d="M4 18v-1a4 4 0 014-4h2a4 4 0 014 4v1"/><circle cx="9" cy="7" r="3"/><path d="M16 11a3 3 0 100-6"/><path d="M18 13a4 4 0 012 3.5V18"/>'},
+    {v:"feedback",name:"Feedback",hint:"Giving or getting it",icon:'<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8"/><path d="M8 12h5"/>'},
+    {v:"1:1",name:"1:1",hint:"With your manager",icon:'<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M3 19a5 5 0 0110 0"/><path d="M11 19a5 5 0 0110 0"/>'},
+    {v:"email",name:"Email",hint:"Written requests",icon:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'},
+    {v:"negotiation",name:"Negotiation",hint:"Scope, price, timeline",icon:'<path d="M3 12l4-4 5 5"/><path d="M21 12l-4-4-5 5"/><path d="M9 15l3 3 3-3"/>'},
+    {v:"onboarding",name:"Onboarding",hint:"First weeks on a team",icon:'<path d="M5 20V5l7 3 7-3v15"/><path d="M12 8v12"/>'},
+    {v:"social",name:"Social",hint:"Lunch, small talk",icon:'<path d="M7 10h10"/><path d="M8 10l1 9h6l1-9"/><path d="M9 6c0-1 1-2 3-2s3 1 3 2"/>'},
+  ];
+  const EXAMPLES = [
+    ["Feedback","In a meeting I said my colleague’s idea was “wrong.” How can I improve the situation?"],
+    ["Meeting","I give a status update to executives in 10 minutes. How do I keep it short without sounding abrupt?"],
+    ["Feedback","My U.S. manager called my proposal “interesting.” Is that good or bad?"],
+    ["Culture","I don’t understand why people here smile so much in meetings, even when they disagree."],
+    ["Email","A client hasn’t answered my email in a week. Should I follow up, and how?"],
+    ["1:1","My manager asked “Any questions?” and I said no. Was that a missed chance?"],
+  ];
+  const NOT_LISTED = "Not listed";
+  const parseCSV = t => { const [h, ...rows] = t.trim().split(/\r?\n/); const cols = h.split(",").map(s => s.trim()); const o = {};
+    rows.forEach(r => { const v = r.split(","); if (v.length < cols.length) return; o[v[0].trim()] = {}; cols.slice(1).forEach((c, i) => o[v[0].trim()][c] = +v[i + 1]); }); return o; };
+  let COUNTRIES = parseCSV(CSV_FALLBACK);
+
+  // Demo-mode coaching (used when no coach service is connected). Keyed by dimension; "up" = learner sits toward the "hi" end compared with the workplace.
+  const DEMO = {
+    communicating_low_to_high_context:{up:["Here, people often take words at face value.","Hints or “maybe” may be heard as agreement.",["Let me be clear about my main point.","Here’s what I’m asking for."],"hoping others will read between the lines."],
+      down:["Here, people may say less and expect you to read the context.","Very direct statements may be heard as blunt.",["Can I check how you see it?","It sounds like there may be more to this."],"taking silence as agreement."]},
+    evaluating_direct_to_indirect:{up:["Here, feedback on work is often clear and specific.","Softened feedback may not be heard as feedback at all.",["One thing I’d change is…","The goal is right. I’d look again at the timeline."],"wrapping a view in so much praise that it disappears."],
+      down:["Here, criticism is often cushioned with positives.","Direct criticism may be heard as harsh or personal.",["This part works well. One thing to rethink is…","What if we tried…?"],"“That’s wrong,” especially in front of a group."]},
+    persuading_principles_to_applications:{up:["Here, people may want the reasoning before the conclusion.","Jumping to the answer may be heard as unsupported.",["Here’s the reasoning behind it.","Let me walk through why."],"skipping the why."],
+      down:["Here, people often want the practical point and an example first.","Starting with theory may be heard as slow.",["Bottom line: …","Here’s an example that shows it."],"long background before your recommendation."]},
+    leading_egalitarian_to_hierarchical:{up:["Here, managers often expect ideas from everyone, including newer people.","Waiting to be asked may be heard as having no opinion.",["I have an idea I’d like to share.","Could I suggest another option?"],"saving all your input for private conversations."],
+      down:["Here, titles may matter more than you expect.","Challenging a senior person openly may be heard as disrespect.",["Would you be open to another view?","I’d value your guidance on this."],"skipping the person who owns the decision."]},
+    deciding_consensual_to_topdown:{up:["Here, people may expect to be consulted before a decision.","Deciding alone may be heard as not listening.",["Before we decide, what are your views?","Does anyone see a risk I’m missing?"],"announcing decisions without input."],
+      down:["Here, decisions are often made quickly by one person and adjusted later.","Asking for more discussion may be heard as slowing things down.",["What do we need to decide today?","Can we agree on a next step and revisit?"],"waiting for full agreement before acting."]},
+    trusting_task_to_relationship:{up:["Here, trust is often built through reliable work, and different views are expected in meetings.","Waiting to share a view may be heard as agreement.",["I want this to work, so here’s my view.","Here’s what I’m seeing."],"sharing your view only after the decision."],
+      down:["Here, people may want to know you before working closely.","Going straight to business may be heard as cold.",["How has your week been?","I’d like to hear how you see this."],"skipping small talk entirely."]},
+    disagreeing_confrontational_to_avoids:{up:["Here, open disagreement about ideas is often expected and not personal.","Silence may be heard as agreement.",["I see it differently.","Can I share another angle?"],"agreeing in the meeting and disagreeing later."],
+      down:["Here, disagreement is often softened to keep things smooth.","Strong pushback may be heard as an attack.",["I see a risk with that approach because…","Could we test another option?"],"“That’s wrong,” especially in front of others."]},
+    scheduling_linear_to_flexible:{up:["Here, start times and deadlines are often firm commitments.","Running late may be heard as not caring.",["I’ll have it to you by Thursday at noon.","I may be five minutes late. I’ll message if so."],"treating deadlines as estimates."],
+      down:["Here, plans may shift as priorities change.","Insisting on the schedule may be heard as rigid.",["Is this deadline still the priority?","What would help most right now?"],"frustration when agendas change."]},
+  };
+
+  // ================= STATE =================
+  const K = "axw-profile-v1", REFL = "axw-reflections-v1", LAST = "axw-lastplan-v1";
+  const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
+  const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  const saved = load(K, null);
+  const S = {
+    view: saved && saved.home ? "welcomeBack" : "welcome",
+    home: saved?.home || null, target: saved?.target || "United States", overrides: saved?.overrides || {}, showAll: false,
+    scenario: null, story: "", urgency: "today", style: "direct & concise", language: "confident", role: "Expat professional",
+    plan: null, top: null, tab: 0, planError: null, demo: false, practice: [], practiceTitle: "", coach: [], busy: false,
+    last: load(LAST, null),
+  };
+  const persist = () => save(K, { home: S.home, target: S.target, overrides: S.overrides });
+  const baseHome = () => (!S.home || S.home === NOT_LISTED || !COUNTRIES[S.home]) ? Object.fromEntries(DIMS.map(d => [d.k, 4])) : COUNTRIES[S.home];
+  const homeVals = () => Object.fromEntries(DIMS.map(d => [d.k, S.overrides[d.k] ?? baseHome()[d.k]]));
+  const targetVals = () => COUNTRIES[S.target] || COUNTRIES["United States"];
+  const tShort = () => S.target === "United States" ? "U.S." : S.target;
+  function rank(scenario) {
+    const h = homeVals(), t = targetVals(), w = WEIGHTS[scenario] || {};
+    return DIMS.map(d => { const gap = t[d.k] - h[d.k], wt = w[d.k] || 1; return { ...d, home: h[d.k], target: t[d.k], gap, abs: Math.abs(gap), weight: wt, score: Math.abs(gap) * wt }; })
+      .sort((a, b) => b.score - a.score || b.abs - a.abs);
+  }
+  const dirText = g => g.gap === 0 ? "no difference on this scale" : `the ${tShort()} workplace sits ${g.abs} point${g.abs > 1 ? "s" : ""} closer to "${g.gap < 0 ? g.lo : g.hi}" than the learner`;
+
+  (async () => {
+    try { const r = await fetch("data/cultural_dimensions.csv", { cache: "no-store" }); if (r.ok) { const c = parseCSV(await r.text()); if (c["United States"]) COUNTRIES = c; } } catch {}
+    try { const r = await fetch("data/scenario_weights.json", { cache: "no-store" }); if (r.ok) { const j = await r.json(); if (j && typeof j === "object") WEIGHTS = j; } } catch {}
+    render();
+  })();
+
+  // ================= COACH SERVICE =================
+  // Order: claude.ai runtime (when opened there) -> configured coach service (config.js apiUrl) -> demo mode.
+  const API = (window.GOTCHOO_CONFIG && window.GOTCHOO_CONFIG.apiUrl) || "";
+  let runtime = null;
+  (async () => { try { if (window.claude && window.claude.use) runtime = await window.claude.use("sample"); } catch {} })();
+  const live = () => !!(runtime || API);
+  async function callCoach(messages, { onText, signal } = {}) {
+    if (runtime) return runtime(messages, { onText, signal, cache: false });
+    if (!API) throw { code: "demo" };
+    let res;
+    try { res = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages }), signal }); }
+    catch (e) { throw { code: e && e.name === "AbortError" ? "cancelled" : "failed" }; }
+    if (!res.ok || !res.body) throw { code: res.status === 429 ? "rate_limited" : res.status === 413 ? "too_long" : res.status === 503 ? "not_configured" : "failed" };
+    const rd = res.body.getReader(), dec = new TextDecoder(); let text = "";
+    for (;;) { const { done, value } = await rd.read(); if (done) break; text += dec.decode(value, { stream: true }); onText && onText({ text }); }
+    if (text.includes("[[COACH_ERROR]]")) throw { code: "failed" };
+    return { text };
+  }
+  const ERR = c => ({ not_configured: "The coach service isn’t set up yet.", rate_limited: "Lots of requests right now. Try again in a moment.",
+    too_long: "That’s a bit long. Shorten it and try again.", not_granted: "The coach needs your permission. Reload and choose Allow.", bad_json: "The plan came back in an unexpected format. Try again." }[c]
+    || "Couldn’t reach the coach. Check your connection and try again.");
+
+  const SYSTEM = `You are the gotchoo coach, a cross-cultural workplace coach. gotchoo helps people say what they mean so it clicks with the person they are talking to. Loop: Describe -> Observe -> Understand -> Respond.
+Principles:
+- Guided reflection, not therapy. Start from the person's lived experience (Paulo Freire) and co-create next steps.
+- Observe, don't judge. Separate what happened from what it may mean. Describe the context, never what is wrong with anyone. Use "often/may" language. Never say things like "People from X always...".
+- Frame advice as being understood and sharing a view, not as fixing mistakes or sounding American. Keep the learner's voice.
+- Culture dimensions are paraphrased from Erin Meyer's eight scales; team-safety ideas from Daniel Coyle. Country values are starting hypotheses; the learner's adjusted values outrank them.
+- The app has already ranked the gaps. Use its top 3 unless the story clearly points elsewhere; if you swap one, say why in one clause.
+- Respect direction: learners more direct than the workplace get softening moves; less direct get ways to be more explicit.
+- If a gap is 0-1 points, say it is small and focus on the situation.
+- Style: direct & concise = short; diplomatic = one sentence of rationale per tip; step-by-step = numbered actions.
+- English comfort moderate/limited: scripts under 12 words, common words, no idioms.
+- If advice may touch HR, legal or policy risk, add "Consult local HR or counsel for specifics."
+- Never ask for names or confidential details.`;
+  const analysis = sc => { const r = rank(sc); const adj = Object.keys(S.overrides).map(k => DIMS.find(d => d.k === k)?.name).filter(Boolean);
+    return `Map (1-7 scales; home = learner, target = workplace). Home: ${S.home || NOT_LISTED}${adj.length ? ` (learner adjusted: ${adj.join(", ")})` : ""}. Target: ${S.target}.
+${r.map((g, i) => `${i + 1}. ${g.name} [${g.lo} -> ${g.hi}] learner ${g.home}, target ${g.target}, gap ${g.abs}${g.weight > 1 ? ` x${g.weight}` : ""}: ${dirText(g)}.`).join("\n")}
+Top 3${sc ? " for this scenario" : ""}: ${r.slice(0, 3).map(g => g.name).join(", ")}.`; };
+  const inputs = () => `Inputs: role ${S.role}; home ${S.home || NOT_LISTED}; workplace ${S.target}; scenario ${S.scenario}; urgency ${S.urgency}; style ${S.style}; English comfort ${S.language}.
+What happened: ${S.story}`;
+
+  // ================= helpers =================
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const pos = v => (v - 1) / 6;
+  const TICK = '<svg class="tick" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#9053E9"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const CHEV = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A6D78" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+  function md(text) {
+    const inl = s => esc(s).replace(/\*\*(.+?)\*\*/g, (m, x) => { const k = /observe|heard|try|nice/i.test(x) ? "k1" : /reflection|watch/i.test(x) ? "k2" : /experiment/i.test(x) ? "k3" : ""; return `<strong class="${k}">${x}</strong>`; })
+      .replace(/“([^”]{2,160})”/g, "<q>$1</q>");
+    const out = []; let list = null;
+    text.split(/\n/).forEach(raw => { const l = raw.trim();
+      if (/^([-*•]|\d+\.)\s+/.test(l)) { (list = list || []).push(`<li>${inl(l.replace(/^([-*•]|\d+\.)\s+/, ""))}</li>`); return; }
+      if (list) { out.push(`<ul>${list.join("")}</ul>`); list = null; }
+      if (l) out.push(`<p>${inl(l.replace(/^#+\s*/, ""))}</p>`); });
+    if (list) out.push(`<ul>${list.join("")}</ul>`);
+    return out.join("");
+  }
+  const loopHTML = active => `<ol class="loop" aria-label="Describe, observe, understand, respond">${["Describe","Observe","Understand","Respond"].map((t, i) => `<li class="${t === active ? "on" : ""}"${t === active ? ' aria-current="step"' : ""}>${t}</li>${i < 3 ? '<li class="ar" aria-hidden="true">→</li>' : ""}`).join("")}</ol>`;
+  const q = (title, sub) => `<div class="q"><h1 id="vt" tabindex="-1">${title}</h1>${sub ? `<p>${sub}</p>` : ""}</div>`;
+
+  // ================= views =================
+  const PHASE = { setup: 1, map: 1, moment: 2, story: 2, observe: 3, plan: 4, practice: 5 };
+  const PNAME = ["Set up", "Describe", "Observe", "Understand", "Respond"];
+  const ICON_PLAN = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#173440" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h10M9 12h10M9 19h10"/><path d="M4 5l1 1 2-2M4 12l1 1 2-2M4 19l1 1 2-2"/></svg>';
+  const ICON_CHAT = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#173440" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8"/><path d="M8 12h5"/></svg>';
+  const opt = (id, primary, icon, title, desc, meta, pill) => `<button type="button" class="opt ${primary ? "primary" : ""}" id="${id}"><span class="ic">${icon}</span><span class="t">${title}</span><span class="d">${desc}</span><span class="f"><span>${meta}</span><span class="pill">${pill}</span></span></button>`;
+  const mapCard = note => `<button type="button" class="mapcard" id="mapCard"><span class="mm" aria-hidden="true"><i style="--p:70%"></i><i style="--p:30%"></i><i style="--p:85%"></i></span><span class="tx"><b>Your map · ${esc(S.home || NOT_LISTED)} → ${esc(S.target)}</b><span>${note}</span></span><span class="pill">Adjust</span></button>`;
+
+  function sliders() { const h = homeVals(), t = targetVals();
+    return `<div>${DIMS.map(d => { const gap = Math.abs(h[d.k] - t[d.k]), adj = S.overrides[d.k] !== undefined;
+      return `<div class="dim"><div class="dimhead"><label for="r-${d.k}">${d.name}</label>${gap >= 3 ? '<span class="tag gap">Big gap</span>' : adj ? '<span class="tag adj">Adjusted</span>' : ""}</div>
+      <div class="track"><span class="ln"></span><span class="wd" style="left:calc(14px + (100% - 28px) * ${pos(t[d.k])})"></span><input type="range" id="r-${d.k}" data-dim="${d.k}" min="1" max="7" step="1" value="${h[d.k]}" aria-valuetext="You ${h[d.k]} of 7, ${esc(tShort())} workplace ${t[d.k]}"></div>
+      <div class="ends"><span>${d.lo}</span><span>${d.hi}</span></div></div>`; }).join("")}</div>`; }
+  const V = {
+    welcome: () => ({ chrome: false, html: `<div class="hello"><p class="eyebrow">Your cross-cultural workplace coach</p><h1 id="vt" tabindex="-1">Hello.</h1><p class="ask">Say it so it clicks.</p><p>You know what you want to say. We’ll help you make sure it lands.</p></div>
+      <p class="choose">How would you like to start?</p><div class="options">
+      ${opt("goPlan", true, ICON_PLAN, "Build a plan", "Tell us what happened. We’ll help you plan what to say and how to say it.", "About 3 minutes", "Start →")}
+      ${opt("goCoach", false, ICON_CHAT, "Ask the coach", "Have a quick question about tone, wording, or cultural context? Ask.", "About 1 minute", "Ask →")}</div>` }),
+    welcomeBack: () => ({ chrome: false, html: `<div class="hello"><p class="eyebrow">Your cross-cultural workplace coach</p><h1 id="vt" tabindex="-1">Welcome back.</h1><p class="ask">Say it so it clicks.</p><p>What would you like to work on today?</p></div>
+      <div style="margin-top:6px">${mapCard("Saved on this device.")}</div><div class="options" style="margin-top:14px">
+      ${opt("goMoment", true, ICON_PLAN, "Plan a new moment", "Skip setup. Tell us what happened and we’ll help you plan what to say.", "About 2 minutes", "Start →")}
+      ${opt("goCoach", false, ICON_CHAT, "Ask the coach", "Have a quick question about tone, wording, or cultural context? Ask.", "About 1 minute", "Ask →")}</div>
+      ${S.last ? `<button type="button" class="lastplan" id="openLast"><span><span class="muted" style="display:block;font-size:13px">Your last plan</span><b>${esc(S.last.plan.headline || "Your plan")}</b></span>${CHEV}</button>` : ""}` }),
+    setup: () => { const list = Object.keys(COUNTRIES).filter(c => c !== "United States").sort();
+      const all = Object.keys(COUNTRIES), top = ["United States", "Germany", "Netherlands", "France"].filter(c => all.includes(c));
+      const works = S.showAll ? all : [...new Set([...top, S.target])];
+      return { wide: true, html: `<div class="setupgrid"><div>` + q("Where are you coming from?", "Pick the culture you grew up working in. It’s a starting point you can adjust.") +
+        `<div class="grid2">${list.map(c => `<button type="button" class="tile" data-home-c="${esc(c)}" aria-pressed="${S.home === c}"><span class="badge">${CODES[c] || esc(c.slice(0, 2).toUpperCase())}</span><span class="name">${esc(c)}</span>${TICK}</button>`).join("")}
+        <button type="button" class="tile full" data-home-c="${NOT_LISTED}" aria-pressed="${S.home === NOT_LISTED}"><span class="badge" style="font-size:20px">+</span><span class="name">Not listed<span class="hint">Start at the middle and rate yourself</span></span>${TICK}</button></div>
+        <section class="sec"><h2>Where do you work now?</h2><div class="chiprow">${works.map(c => `<button type="button" class="wchip" data-work="${esc(c)}" aria-pressed="${S.target === c}"><b>${CODES[c] || ""}</b>${esc(c)}${S.target === c ? TICK.replace('class="tick"', 'class="tick" style="display:block"') : ""}</button>`).join("")}
+        ${S.showAll ? "" : `<button type="button" class="wchip more" id="moreWork">More</button>`}</div></section>
+        ${S.home ? mapCard("Starting point loaded. Adjust it if it doesn’t fit you.") : ""}</div>
+        <aside class="deskmap" aria-label="Your map"><h2>Your map</h2><p class="muted" style="font-size:15px;margin:4px 0 10px">${S.home ? `Loaded from ${esc(S.home)} → ${esc(S.target)}. Drag any marker that doesn’t fit how you work.` : "Choose where you’re from to load a starting point."}</p>
+        <div class="legend" aria-hidden="true" style="background:#fff"><span><i class="you"></i>You</span><span><i class="dia"></i>${esc(tShort())} workplace</span></div>${sliders()}
+        ${Object.keys(S.overrides).length ? `<p style="margin-top:8px"><button type="button" class="link" id="resetMap">Reset to the starting point</button></p>` : ""}
+        <p class="note" style="margin-top:8px">1–7 scales paraphrased from Erin Meyer’s eight dimensions. Starting estimates, not facts about you.</p></aside></div>`,
+        cta: "Continue", ok: !!S.home, sub: "Set up once. We’ll remember it on this device.", next: () => go("moment") }; },
+    map: () => { const h = homeVals(), t = targetVals();
+      return { html: q("Does this sound like you?", `We loaded ${esc(!S.home || S.home === NOT_LISTED ? "the middle of each scale" : S.home)} as a starting point. Drag any marker that doesn’t fit how you work.`) +
+        `<div class="legend" aria-hidden="true"><span><i class="you"></i>You</span><span><i class="dia"></i>${esc(tShort())} workplace</span></div>${sliders()}
+          ${Object.keys(S.overrides).length ? `<p style="margin-top:8px"><button type="button" class="link" id="resetMap">Reset to the starting point</button></p>` : ""}`,
+        cta: "Save my map", ok: true, sub: "Optional. Your map shapes every answer.", next: () => go(S.returnTo || "setup") }; },
+    moment: () => ({ html: q("What kind of moment is it?", "This shows which differences matter most.") +
+      `<div class="grid2">${SCENARIOS.map(s => `<button type="button" class="tile scen" data-scen="${s.v}" aria-pressed="${S.scenario === s.v}"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6A3DD0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${s.icon}</svg></span><span><span class="name" style="display:block">${s.name}</span><span class="hint">${s.hint}</span></span>${TICK}</button>`).join("")}</div>`,
+      cta: "Continue", ok: !!S.scenario, next: () => go("story") }),
+    story: () => { const chips = (n, lg, opts, cur) => `<fieldset><legend>${lg}</legend><div class="chips">${opts.map(([v, l]) => `<label class="chip"><input type="radio" name="${n}" value="${esc(v)}" ${v === cur ? "checked" : ""}><span>${l}</span></label>`).join("")}</div></fieldset>`;
+      const ok = S.story.trim().length >= 12;
+      return { html: q("What happened?", "Describe it the way you’d tell a friend: what you saw and heard. No names needed.") +
+        `<div style="display:flex;flex-direction:column;gap:22px"><div><label for="story" class="sr">What happened</label>
+        <textarea id="story" class="big" maxlength="1500" placeholder="e.g., My manager asked what I thought of a teammate’s plan. I said it was “interesting.” Later I learned no one realized I saw it differently.">${esc(S.story)}</textarea><div class="count" id="count">${S.story.length} / 1500</div></div>
+        ${chips("urgency", "How soon do you need help?", [["today", "Today"], ["this week", "This week"], ["planning ahead", "Planning ahead"]], S.urgency)}
+        <details class="tailor"><summary><span><b>Tailor my plan</b> <span class="muted">(optional)</span><span class="muted" style="display:block;font-size:14px" id="tailorSum">${esc(tailorSummary())}</span></span>${CHEV}</summary><div class="in">
+        ${chips("style", "How should the plan sound?", [["direct & concise", "Direct & concise"], ["diplomatic", "Diplomatic"], ["step-by-step", "Step-by-step"]], S.style)}
+        ${chips("language", "Your English", [["confident", "Confident"], ["moderate", "Moderate"], ["limited", "Limited"]], S.language)}
+        ${chips("role", "Your role", [["Expat professional", "Expat professional"], ["HR mobility", "HR mobility"], ["Relocation consultant", "Relocation consultant"], ["Manager of an international team", "Team manager"]], S.role)}</div></details></div>`,
+        cta: "Build my plan", ok, sub: ok ? "" : "Write a sentence or two to continue.", next: buildPlan }; },
+    observe: () => { const top = rank(S.scenario).slice(0, 3), mx = Math.max(...top.map(g => g.score), 1), cols = ["var(--vio)", "var(--mint-d)", "var(--pink-d)"];
+      return { html: `<div class="space"><svg class="motif" width="230" height="230" viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(0 3)" fill="none" stroke="#2A4A58" stroke-width="1.6" stroke-linejoin="round"><path d="M8 1.2 H32.4 A6.8 6.8 0 0 1 39.2 8 V28 A6.8 6.8 0 0 1 32.4 34.8 H15 L2.4 43 V8 A6.8 6.8 0 0 1 8 1.2 Z"/><path d="M27.4 13.8 H56 A6.8 6.8 0 0 1 62.8 20.6 V59.5 L48.5 47.8 H27.4 A6.8 6.8 0 0 1 20.6 41 V20.6 A6.8 6.8 0 0 1 27.4 13.8 Z"/></g></svg>
+        ${loopHTML("Observe")}<h1 id="vt" tabindex="-1">What’s different in this context</h1><p>Observed from your map, before any advice is written.</p></div>
+        <ol class="bars">${top.map((g, i) => `<li><div class="r"><b>${g.name}</b><span>gap ${g.abs}${g.weight > 1 ? `, key for ${esc(S.scenario)}` : ""}</span></div><div class="bar"><i style="width:${(g.score / mx * 100).toFixed(0)}%;background:${cols[i]};animation-delay:${i * .15}s"></i></div></li>`).join("")}</ol>
+        ${S.planError ? `<div class="status" role="alert"><p class="error">${esc(S.planError)}</p></div>` : `<div class="status" role="status"><svg class="spin" width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="14" fill="none" stroke="#DCE4E8" stroke-width="4"/><path d="M18 4a14 14 0 0114 14" fill="none" stroke="#9053E9" stroke-width="4" stroke-linecap="round"/></svg><div><b>Writing your plan…</b><p class="muted" style="font-size:14px">Opens automatically · usually under a minute</p></div></div>`}`,
+        cta: S.planError ? "Try again" : null, ok: true, next: buildPlan }; },
+    plan: () => { const p = S.plan, top = S.top, gaps = (p.gaps || []).slice(0, 3), scen = SCENARIOS.find(s => s.v === S.scenario)?.name || "";
+      const match = n => { const x = String(n || "").toLowerCase(); return rank(S.scenario).find(g => x.includes(g.name.toLowerCase()) || g.name.toLowerCase().includes(x.split(" ")[0])); };
+      return { html: `<div class="plan-top">${loopHTML("Understand")}<p class="kicker">Your plan · ${esc(S.home || NOT_LISTED)} → ${esc(tShort())}${scen ? " · " + esc(scen) : ""}</p>
+        <h1 class="plan-title" id="vt" tabindex="-1">${esc(p.headline || "Make meaning click.")}</h1>
+        <ul class="why" aria-label="Why these gaps">${top.map((g, i) => `<li class="c${i}">${esc(g.name)} · gap ${g.abs}${g.weight > 1 ? `, key for ${esc(S.scenario)}` : ""}</li>`).join("")}</ul>
+        ${S.demo ? `<p class="demo">Demo mode: this plan is written from built-in examples for your top gaps. Connect a coach service for personal, live answers.</p>` : ""}
+        ${p.swap_note ? `<p class="small-status">${esc(p.swap_note)}</p>` : ""}</div>
+        <div class="gtabs" role="tablist" aria-label="Your gaps">${gaps.map((g, i) => `<button role="tab" class="c${i}" id="gt${i}" aria-controls="gp${i}" aria-selected="${S.tab === i}" tabindex="${S.tab === i ? 0 : -1}" data-tab="${i}">${esc(g.dimension)}</button>`).join("")}</div>
+        <div class="gcards">${gaps.map((g, i) => { const m = match(g.dimension); return `<section class="gcard c${i} ${S.tab === i ? "" : "off"}" role="tabpanel" id="gp${i}" aria-labelledby="gt${i}"><h2>${esc(g.dimension)}</h2>
+          ${m ? `<div class="gmeta"><span>You ${m.home} · ${esc(tShort())} ${m.target} · gap ${m.abs}</span>${i === 0 ? '<span class="tag gap">Biggest gap</span>' : ""}</div><div class="mini" aria-hidden="true"><span class="ml"></span><span class="md" style="left:${pos(m.target) * 100}%"></span><span class="my" style="left:${pos(m.home) * 100}%"></span></div>` : ""}
+          <div><p class="lbl">Observe</p><p class="txt">${esc(g.notice)}</p></div>
+          <div><p class="lbl">How it may be heard</p><p class="txt">${esc(g.heard)}</p></div>
+          <div class="say"><p class="lbl">Respond: try saying</p>${(g.scripts || []).map(s => `<p class="line">“${esc(String(s).replace(/^["“]|["”]$/g, ""))}”</p>`).join("")}</div>
+          <div class="watch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B83468" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg><p><b style="color:var(--ink)">Watch for:</b> ${esc(g.watch_for)}</p></div></section>`; }).join("")}</div>
+        <section class="week"><h2>This week</h2><div class="wgrid">
+          <div class="wcard exp"><p class="lbl">48-hour experiment</p><p>${esc(p.experiment)}</p></div>
+          <div class="wcard ref"><p class="lbl"><label for="reflect">60-second reflection</label></p><p>${esc(p.reflection)}</p><textarea id="reflect" placeholder="Your answer (saved only on this device)"></textarea><div style="display:flex;gap:10px;align-items:center;margin-top:8px"><button class="btn ghost small" type="button" id="saveRefl">Save</button><span class="small-status" id="reflStatus" role="status"></span></div></div>
+          <div class="wcard saf"><p class="lbl">Team-safety tip</p><p>${esc(p.safety_tip)}</p></div></div>
+          <button type="button" class="rowlink" id="askAfter">Have a follow-up question? Ask the coach${CHEV}</button></section>
+        <section class="week"><h2>Respond: practice a what-if</h2>${(p.what_ifs || []).slice(0, 2).map((w, i) => `<div class="wi"><span>${esc(w)}</span><button class="btn small" type="button" data-wi="${i}">Practice</button></div>`).join("")}</section>
+        ${p.hr_note ? `<p class="hr" style="margin-top:18px">${esc(p.hr_note)}</p>` : ""}
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px"><button class="btn ghost small" type="button" id="sharePlan">Save or share</button><button class="btn ghost small" type="button" id="newMoment">Plan another moment</button><span class="small-status" id="copyStatus" role="status"></span></div>`,
+        cta: null }; },
+    practice: () => chatView("practice", S.practiceTitle, "Answer in your own words…"),
+    coach: () => ({ html: `<div class="q"><h1 id="vt" tabindex="-1">Ask about a real moment</h1><p>Quick questions about a moment at work. Your map shapes every answer.</p><p class="muted" style="font-size:15px">Need more than a quick answer? <button type="button" class="link" id="toPlan">Build a plan</button></p></div>
+      <div class="coachgrid"><div class="tips"><b>For the best answer, include:</b><ol>
+      <li><span class="n">1</span><span><b style="display:block">What happened</b><span class="muted">What you saw and heard, not what you think it meant.</span></span></li>
+      <li><span class="n">2</span><span><b style="display:block">Who was there</b><span class="muted">Your manager, peers, a client, a big group or one person.</span></span></li>
+      <li><span class="n">3</span><span><b style="display:block">What you want next</b><span class="muted">To repair a moment, prepare for one, or just understand it.</span></span></li></ol>
+      <p class="note">No names or confidential details needed.</p></div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:18px"><b>Or start from an example</b><div class="examples">${EXAMPLES.map(([t, x], i) => `<button type="button" class="ex" data-ex="${i}"><span class="tg">${t}</span><span>${esc(x)}</span></button>`).join("")}</div></div></div>
+      <form class="composer" id="composer" style="margin-top:20px"><label for="msg" class="sr">Ask the coach</label><textarea id="msg" rows="1" placeholder="Describe your moment: what happened, who was there, what you want next…"></textarea><button class="send" id="sendBtn" type="submit" aria-label="Send" disabled>${SEND}</button></form>`, cta: null }),
+    coachChat: () => chatView("coach", "Ask the coach", "Ask a follow-up…"),
+  };
+  const SEND = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#173440" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>';
+  function chatView(kind, title, ph) {
+    const list = kind === "practice" ? S.practice : S.coach;
+    return { html: `<div class="chatwrap">${kind === "practice" ? `<div class="row">${loopHTML("Respond")}<button type="button" class="link" id="backPlan2">Back to plan</button></div>` : ""}<div class="q" style="margin:8px 0 4px"><h1 id="vt" tabindex="-1" style="font-size:22px">${esc(title)}</h1>${kind === "coach" ? `<p>Your map shapes every answer.${live() ? "" : " Demo mode: sample answers."}</p>` : ""}</div>
+      <div class="log" id="log">${list.filter(m => !m.hidden).map(m => `<div class="bub ${m.role === "user" ? "me" : ""}">${m.role === "user" ? esc(m.shown || m.content) : md(m.content)}</div>`).join("")}${S.busy ? `<div class="bub" id="live"><span class="thinking"><i class="pulse"></i>Thinking…</span></div>` : ""}</div>
+      ${kind === "coach" ? `<div class="qchips"><button type="button" data-q="Practice it with me">Practice it with me</button><button type="button" data-q="plan">Make me a plan</button></div>` : ""}
+      <form class="composer" id="composer"><label for="msg" class="sr">Your message</label><textarea id="msg" rows="1" placeholder="${ph}"></textarea><button class="send" id="sendBtn" type="submit" aria-label="Send" disabled>${SEND}</button></form>
+      <p class="small-status" id="chatStatus" role="status"></p></div>`, cta: null };
+  }
+  const tailorSummary = () => `${({"direct & concise": "Direct & concise", diplomatic: "Diplomatic", "step-by-step": "Step-by-step"})[S.style]} · ${S.language[0].toUpperCase() + S.language.slice(1)} English · ${S.role === "Manager of an international team" ? "Team manager" : S.role}`;
+
+  // ================= render =================
+  let lastView = null;
+  const NAV_BACK = { setup: () => S.home && S.last ? "welcomeBack" : "welcome", map: () => S.returnTo || "setup", moment: () => S.cameFromBack ? "welcomeBack" : "setup", story: () => "moment", observe: () => "story", plan: () => "story", practice: () => "plan", coach: () => S.home ? "welcomeBack" : "welcome", coachChat: () => "coach" };
+  function render() {
+    const v = V[S.view](); $("#view").innerHTML = v.html;
+    const chrome = v.chrome !== false; $("#app").classList.toggle("nochrome", !chrome); $("#app").classList.toggle("wide", !!v.wide);
+    const ph = PHASE[S.view];
+    $("#progWrap").hidden = !ph; $("#backBtn").classList.toggle("hide", !NAV_BACK[S.view]);
+    if (ph) { $("#progress").innerHTML = PNAME.map((_, i) => `<span class="${i < ph ? "on" : ""}"></span>`).join(""); $("#progress").setAttribute("aria-valuenow", ph);
+      $("#stepLabel").textContent = `Step ${ph} of 5 · ${PNAME[ph - 1]}${S.view === "map" ? " · optional" : ""}`; }
+    const inCoach = S.view === "coach" || S.view === "coachChat";
+    $("#headRight").innerHTML = (S.view === "practice" ? `<button type="button" class="link" id="backPlan" style="text-decoration:none">Back to plan</button>` : "") +
+      (S.view === "welcome" || S.view === "welcomeBack" ? "" : `<button type="button" class="deskcoach" id="${inCoach ? "deskPlan" : "deskCoach"}">${inCoach ? "Build a plan" : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6A3DD0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8"/><path d="M8 12h5"/></svg>Ask the coach'}</button>`);
+    const cta = $("#cta"); if (v.cta) { cta.hidden = false; $("#ctaBtn").textContent = v.cta; $("#ctaBtn").disabled = !v.ok; $("#ctaSub").hidden = !v.sub; $("#ctaSub").textContent = v.sub || ""; S._next = v.next; } else cta.hidden = true;
+    const railOrder = ["setup", "moment", "observe", "plan", "practice"];
+    $("#railSteps").innerHTML = PNAME.map((n, i) => { const cur = ph === i + 1, done = ph && i + 1 < ph;
+      const can = !cur && ((i === 0 && S.home) || (i === 1 && S.home) || (i === 3 && S.plan));
+      return `<li><button type="button" class="${cur ? "cur" : done ? "done" : ""}" data-goto="${railOrder[i]}" ${can ? "" : "disabled"} ${cur ? 'aria-current="step"' : ""}><span class="rdot">${done ? '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' : i + 1}</span>${n}</button></li>`; }).join("");
+    renderPanel(); bind();
+    if (lastView !== S.view) { if (lastView !== null) { window.scrollTo({ top: 0 }); const t = $("#vt"); t && t.focus({ preventScroll: true }); } lastView = S.view; }
+  }
+  function renderPanel() { const h = homeVals(), t = targetVals(), top = S.scenario ? rank(S.scenario).slice(0, 3) : null;
+    $("#mappanel").innerHTML = `<div><h2>Your map</h2><p class="note" style="font-size:14px">${esc(S.home || "Choose where you’re from")} → ${esc(S.target)}</p></div>
+      <div class="legend" aria-hidden="true" style="padding:10px 12px"><span><i class="you"></i>You</span><span><i class="dia"></i>${esc(tShort())} workplace</span></div>
+      ${DIMS.map(d => `<div class="r2"><div class="h2r"><span>${d.name}</span>${Math.abs(h[d.k] - t[d.k]) >= 3 ? '<span class="tag gap" style="font-size:12px;padding:0 8px">Big gap</span>' : ""}</div><div class="mini" aria-label="You ${h[d.k]}, workplace ${t[d.k]}"><span class="ml"></span><span class="md" style="left:${pos(t[d.k]) * 100}%"></span><span class="my" style="left:${pos(h[d.k]) * 100}%"></span></div></div>`).join("")}
+      ${top ? `<div><b style="font-size:15px">Biggest gaps for this moment</b><ol>${top.map(g => `<li>${g.name}: gap ${g.abs}</li>`).join("")}</ol></div>` : ""}
+      <p class="note">1–7 scales paraphrased from Erin Meyer’s eight dimensions. Starting estimates, not facts about you. Saved only on this device.</p>
+      <button type="button" class="btn ghost small" id="panelAdjust">Adjust my map</button>`; }
+  function go(v) { S.view = v; render(); }
+
+  // ================= events =================
+  function bind() {
+    const on = (sel, fn) => { const el = $(sel); if (el) el.onclick = fn; };
+    on("#goPlan", () => { S.cameFromBack = false; go(S.home ? "setup" : "setup"); });
+    on("#goCoach", () => go("coach"));
+    on("#goMoment", () => { S.cameFromBack = true; go("moment"); });
+    on("#openLast", () => { Object.assign(S, { plan: S.last.plan, top: S.last.top, scenario: S.last.scenario, demo: S.last.demo, tab: 0 }); go("plan"); });
+    on("#mapCard", () => { S.returnTo = S.view; go("map"); });
+    on("#panelAdjust", () => { S.returnTo = S.view === "map" ? S.returnTo : S.view; go("map"); });
+    on("#moreWork", () => { S.showAll = true; render(); });
+    on("#resetMap", () => { S.overrides = {}; persist(); render(); });
+    on("#toPlan", () => go(S.home ? "moment" : "setup"));
+    on("#askAfter", () => go("coach"));
+    on("#backPlan", () => go("plan"));
+    on("#backPlan2", () => go("plan"));
+    on("#railCoach", () => go("coach"));
+    on("#deskCoach", () => go("coach"));
+    on("#deskPlan", () => go(S.home ? "moment" : "setup"));
+    on("#newMoment", () => { S.story = ""; S.scenario = null; S.plan = null; S.tab = 0; go("moment"); });
+    on("#sharePlan", sharePlan);
+    on("#saveRefl", () => { const v = $("#reflect").value.trim(); if (!v) { $("#reflStatus").textContent = "Write a line first."; return; } const l = load(REFL, []); l.unshift({ at: new Date().toISOString(), q: S.plan.reflection, a: v }); save(REFL, l.slice(0, 50)); $("#reflStatus").textContent = "Saved on this device."; });
+    document.querySelectorAll("[data-home-c]").forEach(b => b.onclick = () => { const c = b.dataset.homeC; if (S.home !== c) S.overrides = {}; S.home = c; persist(); render(); document.querySelector(`[data-home-c="${CSS.escape(c)}"]`)?.focus(); });
+    document.querySelectorAll("[data-work]").forEach(b => b.onclick = () => { S.target = b.dataset.work; persist(); render(); document.querySelector(`[data-work="${CSS.escape(S.target)}"]`)?.focus(); });
+    document.querySelectorAll("[data-dim]").forEach(r => r.onchange = () => { S.overrides[r.dataset.dim] = +r.value; persist(); render(); $("#r-" + r.dataset.dim)?.focus(); });
+    document.querySelectorAll("[data-scen]").forEach(b => b.onclick = () => { S.scenario = b.dataset.scen; render(); document.querySelector(`[data-scen="${CSS.escape(S.scenario)}"]`)?.focus(); });
+    const st = $("#story"); if (st) st.oninput = () => { S.story = st.value; $("#count").textContent = `${st.value.length} / 1500`; const ok = st.value.trim().length >= 12; $("#ctaBtn").disabled = !ok; $("#ctaSub").hidden = ok; };
+    document.querySelectorAll('input[type=radio]').forEach(r => r.onchange = () => { S[r.name] = r.value; const ts = $("#tailorSum"); if (ts) ts.textContent = tailorSummary(); });
+    document.querySelectorAll("[data-tab]").forEach(t => { t.onclick = () => { S.tab = +t.dataset.tab; render(); $("#gt" + S.tab).focus(); };
+      t.onkeydown = e => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); S.tab = (S.tab + (e.key === "ArrowRight" ? 1 : 2)) % 3; render(); $("#gt" + S.tab).focus(); } }; });
+    document.querySelectorAll("[data-wi]").forEach(b => b.onclick = () => startPractice(S.plan.what_ifs[+b.dataset.wi]));
+    document.querySelectorAll("[data-ex]").forEach(b => b.onclick = () => { S.coach = []; go("coachChat"); sendCoach(EXAMPLES[+b.dataset.ex][1]); });
+    document.querySelectorAll("[data-q]").forEach(b => b.onclick = () => { if (b.dataset.q === "plan") { const firstUser = S.coach.find(m => m.role === "user" && !m.hidden); if (firstUser) S.story = firstUser.shown || ""; go(S.home ? "moment" : "setup"); } else sendCoach("Let’s practice this. Play the other person in one or two lines, then let me answer."); });
+    document.querySelectorAll("[data-goto]").forEach(b => b.onclick = () => go(b.dataset.goto));
+    const f = $("#composer"); if (f) { const ta = $("#msg"), sb = $("#sendBtn"); const upd = () => { sb.disabled = S.busy || !ta.value.trim(); ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight, 160) + "px"; };
+      ta.oninput = upd; ta.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (!sb.disabled) f.requestSubmit(); } };
+      f.onsubmit = e => { e.preventDefault(); const v = ta.value.trim(); if (!v || S.busy) return; if (S.view === "coach") { S.coach = []; go("coachChat"); } if (S.view === "practice") sendPractice(v); else sendCoach(v); };
+      const lg = $("#log"); lg && lg.lastElementChild && lg.lastElementChild.scrollIntoView({ block: "nearest" }); }
+  }
+  $("#ctaBtn").onclick = () => S._next && S._next();
+  $("#backBtn").onclick = () => { const b = NAV_BACK[S.view]; if (b) go(b()); };
+  document.querySelectorAll("[data-home]").forEach(a => a.onclick = e => { e.preventDefault(); go(S.home ? "welcomeBack" : "welcome"); });
+  addEventListener("scroll", () => $("#mhead").classList.toggle("shadow", scrollY > 4), { passive: true });
+
+  // ================= plan =================
+  function demoPlan() {
+    const top = rank(S.scenario).slice(0, 3);
+    const gaps = top.map(g => { const t = DEMO[g.k][g.gap < 0 ? "up" : "down"]; const small = g.abs <= 1;
+      return { dimension: g.name, notice: small ? `Your styles are close here, so the situation matters more than culture. ${t[0]}` : t[0], heard: t[1], scripts: t[2], watch_for: t[3] }; });
+    return { headline: "Make meaning click.", gaps, swap_note: "", safety_tip: "Say why you’re speaking up: “I’m sharing this because I want us to succeed.”",
+      reflection: "What did you notice about how people responded?", experiment: `In your next two conversations, try: “${gaps[0].scripts[0]}”`,
+      what_ifs: ["What if this happens in front of the whole team?", "What if the other person is senior to you?"], hr_note: "" };
+  }
+  async function buildPlan() {
+    S.planError = null; S.top = rank(S.scenario).slice(0, 3); S.tab = 0; go("observe");
+    let plan, demo = false;
+    if (!live()) { await new Promise(r => setTimeout(r, 1600)); plan = demoPlan(); demo = true; }
+    else {
+      const prompt = `${SYSTEM}\n\n${inputs()}\n\n${analysis(S.scenario)}\n\nReturn ONLY JSON (no markdown), about 300-450 words of content:
+{"headline":"positive headline under 8 words about being understood","gaps":[{"dimension":"one of: ${DIMS.map(d => d.name).join(", ")}","notice":"Observe: what they might notice in this context, 1-2 sentences, often/may language","heard":"How it may be heard: how their current words or silence may be heard here, 1 sentence","scripts":["2-3 short lines they can say"],"watch_for":"one habit to watch for, without blame"}],
+"swap_note":"empty string, or one clause if you replaced an app-ranked gap","safety_tip":"one team-safety move","reflection":"one 60-second reflection question about what they observed","experiment":"one 48-hour micro-experiment with exact words in quotes","what_ifs":["two practice variants, each one sentence starting 'What if'"],"hr_note":"'Consult local HR or counsel for specifics.' only if relevant, else empty string"}
+Exactly 3 gaps, in this order unless you swap: ${S.top.map(g => g.name).join(", ")}.`;
+      try { const { text } = await callCoach([{ role: "user", content: prompt }]); const a = text.indexOf("{"), b = text.lastIndexOf("}");
+        try { plan = JSON.parse(text.slice(a, b + 1)); } catch { throw { code: "bad_json" }; }
+        if (!plan || !Array.isArray(plan.gaps) || !plan.gaps.length) throw { code: "bad_json" };
+      } catch (e) { S.planError = ERR(e && e.code); if (S.view === "observe") render(); return; }
+    }
+    S.plan = plan; S.demo = demo; S.last = { plan, top: S.top, scenario: S.scenario, demo }; save(LAST, S.last);
+    if (S.view === "observe") go("plan");
+  }
+  async function sharePlan() {
+    const p = S.plan, txt = [p.headline, ...(p.gaps || []).map(g => `\n${g.dimension}\nObserve: ${g.notice}\nHow it may be heard: ${g.heard}\nTry saying: ${(g.scripts || []).map(s => `"${s}"`).join(" / ")}\nWatch for: ${g.watch_for}`),
+      `\n48-hour experiment: ${p.experiment}`, `60-second reflection: ${p.reflection}`, `Team-safety tip: ${p.safety_tip}`, p.hr_note || "", "\ngotchoo · Say it so it clicks."].join("\n").trim();
+    try { if (navigator.share) { await navigator.share({ title: "My gotchoo plan", text: txt }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
+    try { await navigator.clipboard.writeText(txt); $("#copyStatus").textContent = "Copied. Paste it into notes or email."; } catch { $("#copyStatus").textContent = "Couldn’t copy automatically."; }
+  }
+
+  // ================= chats =================
+  function demoCoachReply(userText, first) {
+    const top = rank(S.scenario || "").slice(0, 2); const g = top[0], t = DEMO[g.k][g.gap < 0 ? "up" : "down"];
+    if (/wrong/i.test(userText) && first) return `**Observe:** In many U.S. teams, “wrong” may be heard as closing the discussion, not as disagreeing with one idea.\n**How it may be heard:** as a judgment of the person, especially in front of the group.\n**Try saying:** “I see it differently because…” / “Could we test another approach?”\n**60-second reflection:** What were you hoping would happen when you said it?\n**48-hour experiment:** Next time, start with “I see a risk with that approach because…”`;
+    if (/practice/i.test(userText)) return `**Colleague (role-play):** “Okay, the plan looks good to me. Any thoughts before we move ahead?”\n\nYour turn. Answer in your own words.`;
+    if (!first) return `**Nice:** you shared your view and kept it about the work.\n**Try:** “${t[2][0]}”\n**Reflection:** What did you notice about how you felt saying it?`;
+    return `**Observe:** ${t[0]}\n**How it may be heard:** ${t[1]}\n**Try saying:** “${t[2][0]}” / “${t[2][1]}”\n**60-second reflection:** What were you hoping the other person would understand?\n**48-hour experiment:** In your next conversation, try: “${t[2][0]}”`;
+  }
+  const COACH_FIRST = `Answer the learner in this structure, under 180 words, plain language, using **Label:** lines: **Observe:** (what may be happening in the context, no judgment) **How it may be heard:** **Try saying:** 2 short lines in quotes separated by " / " **60-second reflection:** one question **48-hour experiment:** one action with exact words in quotes. Add "Consult local HR or counsel for specifics." only if relevant.`;
+  const COACH_FOLLOW = `This is a follow-up. Answer directly in under 120 words. Start with a plain yes / no / it depends, give the key distinction with example phrasing in quotes, then **Reflection:** one question. If the learner asks to practice, play the other person in one or two lines labeled like **Colleague (role-play):** and invite a reply; after their reply give **Nice:** and **Try:** feedback.`;
+  async function runChat(list, build, demoFn) {
+    S.busy = true; render();
+    try {
+      let text;
+      if (!live()) { await new Promise(r => setTimeout(r, 900)); text = demoFn(); }
+      else ({ text } = await callCoach(build(), { onText: ({ text }) => { const l = $("#live"); if (l) { l.innerHTML = md(text); l.scrollIntoView({ block: "nearest" }); } } }));
+      list.push({ role: "assistant", content: text });
+    } catch (e) { const st = ERR(e && e.code); S.busy = false; render(); const cs = $("#chatStatus"); if (cs) cs.innerHTML = `<span class="error">${esc(st)}</span>`; return; }
+    S.busy = false; render(); $("#msg")?.focus();
+  }
+  function sendCoach(text) {
+    const first = !S.coach.some(m => m.role === "assistant");
+    S.coach.push({ role: "user", content: text, shown: text });
+    runChat(S.coach, () => S.coach.map((m, i) => ({ role: m.role, content: m.role === "user" && i === 0 ? `${SYSTEM}\n\n${analysis(S.scenario || "")}\n\n${COACH_FIRST}\n\nLearner: ${m.content}` : m.role === "user" && i === S.coach.length - 1 ? `${COACH_FOLLOW}\n\nLearner: ${m.content}` : m.content })), () => demoCoachReply(text, first));
+  }
+  function startPractice(w) { S.practiceTitle = w; S.practice = [{ role: "user", hidden: true, content: `${SYSTEM}\n\n${inputs()}\n\n${analysis(S.scenario)}\n\nWe are practicing this what-if from the learner's plan: ${w}\nPlay the other person in one or two natural lines, labeled like **Manager (role-play):**. Then invite the learner to answer in their own words. Under 60 words.` }];
+    go("practice"); runChat(S.practice, () => S.practice.map(({ role, content }) => ({ role, content })), () => `**Manager (role-play):** “Okay, the plan looks good to me. Any thoughts before we move ahead?”\n\nYour turn. Answer in your own words.`); }
+  function sendPractice(text) { S.practice.push({ role: "user", shown: text, content: `Learner's reply: ${text}\n\nGive brief feedback in under 90 words: **Nice:** one thing that worked, observational. **Try:** one better phrasing in quotes, same meaning, their voice. Then continue the role-play with one line from the other person.` });
+    runChat(S.practice, () => S.practice.map(({ role, content }) => ({ role, content })), () => { const g = S.top?.[0], t = g ? DEMO[g.k][g.gap < 0 ? "up" : "down"] : DEMO.trusting_task_to_relationship.up;
+      return `**Nice:** you shared your view clearly and kept it about the work.\n**Try:** “${t[2][0]}”\n**Manager (role-play):** “Tell me more about that.”`; }); }
+
+  render();
+})();
+</script>
+</body>
+</html>

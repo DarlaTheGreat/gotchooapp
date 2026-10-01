@@ -1,0 +1,40 @@
+{
+  "meeting": {
+    "communicating_low_to_high_context": 1.3,
+    "deciding_consensual_to_topdown": 1.3,
+    "disagreeing_confrontational_to_avoids": 1.2,
+    "persuading_principles_to_applications": 1.1,
+    "scheduling_linear_to_flexible": 1.1
+  },
+  "feedback": {
+    "evaluating_direct_to_indirect": 1.5,
+    "disagreeing_confrontational_to_avoids": 1.3,
+    "communicating_low_to_high_context": 1.2
+  },
+  "1:1": {
+    "leading_egalitarian_to_hierarchical": 1.4,
+    "evaluating_direct_to_indirect": 1.2,
+    "trusting_task_to_relationship": 1.2
+  },
+  "email": {
+    "communicating_low_to_high_context": 1.5,
+    "scheduling_linear_to_flexible": 1.2,
+    "persuading_principles_to_applications": 1.1
+  },
+  "negotiation": {
+    "persuading_principles_to_applications": 1.3,
+    "disagreeing_confrontational_to_avoids": 1.3,
+    "trusting_task_to_relationship": 1.3,
+    "deciding_consensual_to_topdown": 1.2
+  },
+  "onboarding": {
+    "trusting_task_to_relationship": 1.3,
+    "leading_egalitarian_to_hierarchical": 1.2,
+    "scheduling_linear_to_flexible": 1.2,
+    "communicating_low_to_high_context": 1.1
+  },
+  "social": {
+    "trusting_task_to_relationship": 1.5,
+    "communicating_low_to_high_context": 1.2
+  }
+}
