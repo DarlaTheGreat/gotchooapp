@@ -564,7 +564,7 @@ What happened: ${S.story}`;
       return { html: `<div class="plan-top">${loopHTML("Understand")}<p class="kicker">Your plan · ${esc(S.home || NOT_LISTED)} → ${esc(tShort())}${scen ? " · " + esc(scen) : ""}</p>
         <h1 class="plan-title" id="vt" tabindex="-1">${esc(p.headline || "Make meaning click.")}</h1>
         <ul class="why" aria-label="Why these gaps">${top.map((g, i) => `<li class="c${i}">${esc(g.name)} · gap ${g.abs}${g.weight > 1 ? `, key for ${esc(S.scenario)}` : ""}</li>`).join("")}</ul>
-        ${S.demo ? `<p class="demo">Demo mode: this plan is written from built-in examples for your top gaps. Connect a coach service for personal, live answers.</p>` : ""}
+        ${S.demo === "fallback" ? `<p class="demo">The coach was busy, so this plan uses built-in examples for your top gaps. Try again in a minute for a personal plan.</p>` : S.demo ? `<p class="demo">Demo mode: this plan is written from built-in examples for your top gaps. Connect a coach service for personal, live answers.</p>` : ""}
         ${p.swap_note ? `<p class="small-status">${esc(p.swap_note)}</p>` : ""}</div>
         <div class="gtabs" role="tablist" aria-label="Your gaps">${gaps.map((g, i) => `<button role="tab" class="c${i}" id="gt${i}" aria-controls="gp${i}" aria-selected="${S.tab === i}" tabindex="${S.tab === i ? 0 : -1}" data-tab="${i}">${esc(g.dimension)}</button>`).join("")}</div>
         <div class="gcards">${gaps.map((g, i) => { const m = match(g.dimension); return `<section class="gcard c${i} ${S.tab === i ? "" : "off"}" role="tabpanel" id="gp${i}" aria-labelledby="gt${i}"><h2>${esc(g.dimension)}</h2>
@@ -678,6 +678,26 @@ What happened: ${S.story}`;
   addEventListener("scroll", () => $("#mhead").classList.toggle("shadow", scrollY > 4), { passive: true });
 
   // ================= plan =================
+  function parsePlan(text) {
+    if (!text) return null;
+    let t = text.replace(/```(?:json)?/gi, "").trim();
+    const a = t.indexOf("{"), b = t.lastIndexOf("}"); if (a < 0 || b <= a) return null; t = t.slice(a, b + 1);
+    const ok = p => p && Array.isArray(p.gaps) && p.gaps.length ? p : null;
+    try { return ok(JSON.parse(t)); } catch {}
+    // Repair: escape stray quotes inside strings, drop raw line breaks and trailing commas
+    let out = "", inStr = false;
+    for (let i = 0; i < t.length; i++) { const c = t[i];
+      if (inStr) {
+        if (c === "\\") { out += c + (t[i + 1] || ""); i++; continue; }
+        if (c === "\n" || c === "\r") { out += " "; continue; }
+        if (c === '"') { let k = i + 1; while (k < t.length && /\s/.test(t[k])) k++; const n = t[k];
+          if (n === "," || n === "}" || n === "]" || n === ":" || k >= t.length) { inStr = false; out += c; } else out += "\\\""; continue; }
+        out += c;
+      } else { if (c === '"') inStr = true; out += c; }
+    }
+    out = out.replace(/,\s*([}\]])/g, "$1");
+    try { return ok(JSON.parse(out)); } catch { return null; }
+  }
   function demoPlan() {
     const top = rank(S.scenario).slice(0, 3);
     const gaps = top.map(g => { const t = DEMO[g.k][g.gap < 0 ? "up" : "down"]; const small = g.abs <= 1;
@@ -691,14 +711,20 @@ What happened: ${S.story}`;
     let plan, demo = false;
     if (!live()) { await new Promise(r => setTimeout(r, 1600)); plan = demoPlan(); demo = true; }
     else {
-      const prompt = `${SYSTEM}\n\n${inputs()}\n\n${analysis(S.scenario)}\n\nReturn ONLY JSON (no markdown), about 300-450 words of content:
-{"headline":"positive headline under 8 words about being understood","gaps":[{"dimension":"one of: ${DIMS.map(d => d.name).join(", ")}","notice":"Observe: what they might notice in this context, 1-2 sentences, often/may language","heard":"How it may be heard: how their current words or silence may be heard here, 1 sentence","scripts":["2-3 short lines they can say"],"watch_for":"one habit to watch for, without blame"}],
-"swap_note":"empty string, or one clause if you replaced an app-ranked gap","safety_tip":"one team-safety move","reflection":"one 60-second reflection question about what they observed","experiment":"one 48-hour micro-experiment with exact words in quotes","what_ifs":["two practice variants, each one sentence starting 'What if'"],"hr_note":"'Consult local HR or counsel for specifics.' only if relevant, else empty string"}
+      const prompt = `${SYSTEM}\n\n${inputs()}\n\n${analysis(S.scenario)}\n\nReturn ONLY one valid JSON object. No markdown, no code fences, no text before or after it. Keep it short: about 250-350 words of content in total.
+JSON rules: every string on one line; inside string values use curly quotes “like this” and never straight double quotes; no trailing commas.
+{"headline":"positive headline under 8 words about being understood","gaps":[{"dimension":"one of: ${DIMS.map(d => d.name).join(", ")}","notice":"what they might notice in this context, 1-2 sentences, often/may language","heard":"how their current words or silence may be heard here, 1 sentence","scripts":["2-3 short lines they can say, no quote marks"],"watch_for":"one habit to watch for, without blame"}],
+"swap_note":"empty string, or one clause if you replaced an app-ranked gap","safety_tip":"one team-safety move","reflection":"one 60-second reflection question about what they observed","experiment":"one 48-hour micro-experiment with exact words in curly quotes","what_ifs":["two practice variants, each one sentence starting What if"],"hr_note":"Consult local HR or counsel for specifics. only if relevant, else empty string"}
 Exactly 3 gaps, in this order unless you swap: ${S.top.map(g => g.name).join(", ")}.`;
-      try { const { text } = await callCoach([{ role: "user", content: prompt }]); const a = text.indexOf("{"), b = text.lastIndexOf("}");
-        try { plan = JSON.parse(text.slice(a, b + 1)); } catch { throw { code: "bad_json" }; }
-        if (!plan || !Array.isArray(plan.gaps) || !plan.gaps.length) throw { code: "bad_json" };
-      } catch (e) { S.planError = ERR(e && e.code); if (S.view === "observe") render(); return; }
+      let lastErr = null;
+      for (let attempt = 0; attempt < 2 && !plan; attempt++) {
+        try { const { text } = await callCoach([{ role: "user", content: prompt }]); plan = parsePlan(text); if (!plan) lastErr = { code: "bad_json" }; }
+        catch (e) { lastErr = e; if (e && e.code !== "bad_json" && e.code !== "failed") break; }
+      }
+      if (!plan) {
+        if (lastErr && (lastErr.code === "bad_json" || lastErr.code === "failed")) { plan = demoPlan(); demo = "fallback"; }
+        else { S.planError = ERR(lastErr && lastErr.code); if (S.view === "observe") render(); return; }
+      }
     }
     S.plan = plan; S.demo = demo; S.last = { plan, top: S.top, scenario: S.scenario, demo }; save(LAST, S.last);
     if (S.view === "observe") go("plan");
