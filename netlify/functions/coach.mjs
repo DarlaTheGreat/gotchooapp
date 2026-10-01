@@ -7,7 +7,7 @@
 
 const MAX_CHARS = 16000;   // total characters accepted per request
 const MAX_TURNS = 20;      // conversation turns accepted per request
-const MAX_TOKENS = 1600;   // cap on each answer's length (cost control)
+const MAX_TOKENS = 3000;   // cap on each answer's length (cost control)
 
 const GUARD = `You are the gotchoo coaching service, a cross-cultural workplace coach. Only help with workplace communication, cross-cultural adaptation and related professional situations. Observe rather than judge. If a request is unrelated (coding, homework, general chat, anything harmful), reply briefly that gotchoo only coaches on workplace communication. Follow the detailed instructions inside the user's first message.`;
 
