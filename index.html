@@ -74,6 +74,36 @@ a{color:var(--vio-d)}
 }
 .deskcoach{display:none;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap}
 
+
+/* readability */
+body{font-size:18px}
+.q p{font-size:17px}
+.steplabel{font-size:15px}
+.tile .name{font-size:18px}.tile .hint{font-size:15px}
+.badge{font-size:15px}
+.wchip{font-size:17px}.wchip b{font-size:13px}
+.ends{font-size:15px}.legend{font-size:15px}
+.tag{font-size:14px}
+.dimhead label{font-size:18px}
+.count{font-size:14px}
+.bars .r b{font-size:19px}
+.gapn{font-size:17px!important;font-weight:700;color:var(--ink)!important}
+.key{font-style:normal;font-size:13px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--vio-t);color:var(--vio-d);margin-left:4px}
+.fam{margin:6px 0 0;font-size:15px;font-weight:600;color:var(--mint-d)}
+.gmeta{font-size:16px;color:var(--body)}.gmeta b{font-size:18px;color:var(--ink)}
+.lbl{font-size:15px}.gcard .txt{font-size:17px}.watch{font-size:16px}
+.wcard p{font-size:17px}.mapcard .tx span{font-size:15px}
+.note{font-size:14px}.small-status{font-size:15px}
+.bub{font-size:17px}
+.mini{height:22px}.mini .ml{top:10px;height:4px}.mini .md{top:5px;width:13px;height:13px;margin-left:-6.5px}.mini .my{top:2px;width:20px;height:20px;margin-left:-10px}
+.mapctl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 12px}
+.mapctl label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px}
+.mapctl select{min-height:52px;padding:0 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-size:17px;font-weight:600}
+details.worked{margin:16px 0 12px}
+.composer.big textarea{min-height:110px;border-radius:18px;font-size:18px;padding:14px 16px}
+.tryrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px}
+.trychip{min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:16px;font-weight:600;cursor:pointer}
+.trychip:hover{border-color:var(--vio)}
 /* rail */
 .rail .brand{font-size:24px}.rail .brand img{width:34px;height:34px}
 .rail .tag{font-size:14px;font-weight:600;color:var(--vio-d);margin-top:6px}
@@ -381,6 +411,7 @@ Russia,4,3,3,5,5,4,4,4`;
     ["1:1","My manager asked “Any questions?” and I said no. Was that a missed chance?"],
   ];
   const NOT_LISTED = "Not listed";
+  const TRY = [["I called an idea “wrong”", 0], ["Is “interesting” good or bad?", 2], ["Keep my update short", 1]];
   const parseCSV = t => { const [h, ...rows] = t.trim().split(/\r?\n/); const cols = h.split(",").map(s => s.trim()); const o = {};
     rows.forEach(r => { const v = r.split(","); if (v.length < cols.length) return; o[v[0].trim()] = {}; cols.slice(1).forEach((c, i) => o[v[0].trim()][c] = +v[i + 1]); }); return o; };
   let COUNTRIES = parseCSV(CSV_FALLBACK);
@@ -412,13 +443,19 @@ Russia,4,3,3,5,5,4,4,4`;
   const saved = load(K, null);
   const S = {
     view: saved && saved.home ? "welcomeBack" : "welcome",
-    home: saved?.home || null, target: saved?.target || "United States", overrides: saved?.overrides || {}, showAll: false,
+    home: saved?.home || null, target: saved?.target || "United States", overrides: saved?.overrides || {}, worked: saved?.worked || [], showAll: false,
     scenario: null, story: "", urgency: "today", style: "direct & concise", language: "confident", role: "Expat professional",
     plan: null, top: null, tab: 0, planError: null, demo: false, practice: [], practiceTitle: "", coach: [], busy: false,
     last: load(LAST, null),
   };
-  const persist = () => save(K, { home: S.home, target: S.target, overrides: S.overrides });
-  const baseHome = () => (!S.home || S.home === NOT_LISTED || !COUNTRIES[S.home]) ? Object.fromEntries(DIMS.map(d => [d.k, 4])) : COUNTRIES[S.home];
+  const persist = () => save(K, { home: S.home, target: S.target, overrides: S.overrides, worked: S.worked });
+  const workedList = () => S.worked.filter(c => COUNTRIES[c] && c !== S.home && c !== S.target);
+  const baseHome = () => { const home = (!S.home || S.home === NOT_LISTED || !COUNTRIES[S.home]) ? null : COUNTRIES[S.home]; const w = workedList();
+    return Object.fromEntries(DIMS.map(d => { const hv = home ? home[d.k] : 4; if (!w.length) return [d.k, hv];
+      const avg = w.reduce((n, c) => n + COUNTRIES[c][d.k], 0) / w.length; return [d.k, Math.round(hv * 0.6 + avg * 0.4)]; })); };
+  // Countries the learner has worked in that sit close to the workplace on a dimension: familiar ground
+  const familiar = g => g.abs < 2 ? [] : workedList().filter(c => Math.abs(COUNTRIES[c][g.k] - g.target) <= 1);
+  const countryOptions = (sel, extra) => (extra ? [extra] : []).concat(Object.keys(COUNTRIES).sort((a, b) => a === "United States" ? -1 : b === "United States" ? 1 : a.localeCompare(b))).map(c => `<option value="${esc(c)}" ${c === sel ? "selected" : ""}>${esc(c)}</option>`).join("");
   const homeVals = () => Object.fromEntries(DIMS.map(d => [d.k, S.overrides[d.k] ?? baseHome()[d.k]]));
   const targetVals = () => COUNTRIES[S.target] || COUNTRIES["United States"];
   const tShort = () => S.target === "United States" ? "U.S." : S.target;
@@ -471,8 +508,9 @@ Principles:
 - If advice may touch HR, legal or policy risk, add "Consult local HR or counsel for specifics."
 - Never ask for names or confidential details.`;
   const analysis = sc => { const r = rank(sc); const adj = Object.keys(S.overrides).map(k => DIMS.find(d => d.k === k)?.name).filter(Boolean);
-    return `Map (1-7 scales; home = learner, target = workplace). Home: ${S.home || NOT_LISTED}${adj.length ? ` (learner adjusted: ${adj.join(", ")})` : ""}. Target: ${S.target}.
-${r.map((g, i) => `${i + 1}. ${g.name} [${g.lo} -> ${g.hi}] learner ${g.home}, target ${g.target}, gap ${g.abs}${g.weight > 1 ? ` x${g.weight}` : ""}: ${dirText(g)}.`).join("\n")}
+    const w = workedList(); return `Map (1-7 scales; home = learner, target = workplace). Home: ${S.home || NOT_LISTED}${w.length ? `; has also worked in ${w.join(", ")} (blended into the starting point)` : ""}${adj.length ? ` (learner adjusted: ${adj.join(", ")})` : ""}. Target: ${S.target}.
+${r.map((g, i) => `${i + 1}. ${g.name} [${g.lo} -> ${g.hi}] learner ${g.home}, target ${g.target}, gap ${g.abs}${g.weight > 1 ? ` x${g.weight}` : ""}: ${dirText(g)}${familiar(g).length ? `; familiar ground from working in ${familiar(g).join(", ")}` : ""}.`).join("\n")}
+Where a gap is familiar from another country, build on that experience ("you may recognize this from...").
 Top 3${sc ? " for this scenario" : ""}: ${r.slice(0, 3).map(g => g.name).join(", ")}.`; };
   const inputs = () => `Inputs: role ${S.role}; home ${S.home || NOT_LISTED}; workplace ${S.target}; scenario ${S.scenario}; urgency ${S.urgency}; style ${S.style}; English comfort ${S.language}.
 What happened: ${S.story}`;
@@ -505,6 +543,11 @@ What happened: ${S.story}`;
   const opt = (id, primary, icon, title, desc, meta, pill) => `<button type="button" class="opt ${primary ? "primary" : ""}" id="${id}"><span class="ic">${icon}</span><span class="t">${title}</span><span class="d">${desc}</span><span class="f"><span>${meta}</span><span class="pill">${pill}</span></span></button>`;
   const mapCard = note => `<button type="button" class="mapcard" id="mapCard"><span class="mm" aria-hidden="true"><i style="--p:70%"></i><i style="--p:30%"></i><i style="--p:85%"></i></span><span class="tx"><b>Your map · ${esc(S.home || NOT_LISTED)} → ${esc(S.target)}</b><span>${note}</span></span><span class="pill">Adjust</span></button>`;
 
+  function mapControls() { const wl = workedList();
+    return `<div class="mapctl"><label>From<select id="selHome">${countryOptions(S.home, S.home ? null : "")}<option value="${NOT_LISTED}" ${S.home === NOT_LISTED ? "selected" : ""}>Not listed</option></select></label>
+      <label>Working in<select id="selWork">${countryOptions(S.target)}</select></label></div>
+      <details class="tailor worked" ${wl.length ? "open" : ""}><summary><span><b>Also worked in</b> <span class="muted" style="display:block;font-size:15px">${wl.length ? esc(wl.join(", ")) : "Optional"}</span></span>${CHEV}</summary>
+      <div class="in"><div class="chiprow">${Object.keys(COUNTRIES).filter(c => c !== S.home && c !== S.target).sort().map(c => `<button type="button" class="wchip" data-worked="${esc(c)}" aria-pressed="${S.worked.includes(c)}"><b>${CODES[c] || ""}</b>${esc(c)}</button>`).join("")}</div></div></details>`; }
   function sliders() { const h = homeVals(), t = targetVals();
     return `<div>${DIMS.map(d => { const gap = Math.abs(h[d.k] - t[d.k]), adj = S.overrides[d.k] !== undefined;
       return `<div class="dim"><div class="dimhead"><label for="r-${d.k}">${d.name}</label>${gap >= 3 ? '<span class="tag gap">Big gap</span>' : adj ? '<span class="tag adj">Adjusted</span>' : ""}</div>
@@ -520,22 +563,24 @@ What happened: ${S.story}`;
       ${opt("goMoment", true, ICON_PLAN, "Plan a new moment", "Skip setup. Tell us what happened and we’ll help you plan what to say.", "About 2 minutes", "Start →")}
       ${opt("goCoach", false, ICON_CHAT, "Ask the coach", "Have a quick question about tone, wording, or cultural context? Ask.", "About 1 minute", "Ask →")}</div>
       ${S.last ? `<button type="button" class="lastplan" id="openLast"><span><span class="muted" style="display:block;font-size:13px">Your last plan</span><b>${esc(S.last.plan.headline || "Your plan")}</b></span>${CHEV}</button>` : ""}` }),
-    setup: () => { const list = Object.keys(COUNTRIES).filter(c => c !== "United States").sort();
-      const all = Object.keys(COUNTRIES), top = ["United States", "Germany", "Netherlands", "France"].filter(c => all.includes(c));
-      const works = S.showAll ? all : [...new Set([...top, S.target])];
+    setup: () => { const list = Object.keys(COUNTRIES).sort((a, b) => a === "United States" ? -1 : b === "United States" ? 1 : a.localeCompare(b));
+      const works = ["United States", ...Object.keys(COUNTRIES).filter(c => c !== "United States").sort()].filter(c => COUNTRIES[c]);
+      const wl = workedList();
       return { wide: true, html: `<div class="setupgrid"><div>` + q("Where are you coming from?", "Pick the culture you grew up working in. It’s a starting point you can adjust.") +
         `<div class="grid2">${list.map(c => `<button type="button" class="tile" data-home-c="${esc(c)}" aria-pressed="${S.home === c}"><span class="badge">${CODES[c] || esc(c.slice(0, 2).toUpperCase())}</span><span class="name">${esc(c)}</span>${TICK}</button>`).join("")}
         <button type="button" class="tile full" data-home-c="${NOT_LISTED}" aria-pressed="${S.home === NOT_LISTED}"><span class="badge" style="font-size:20px">+</span><span class="name">Not listed<span class="hint">Start at the middle and rate yourself</span></span>${TICK}</button></div>
         <section class="sec"><h2>Where do you work now?</h2><div class="chiprow">${works.map(c => `<button type="button" class="wchip" data-work="${esc(c)}" aria-pressed="${S.target === c}"><b>${CODES[c] || ""}</b>${esc(c)}${S.target === c ? TICK.replace('class="tick"', 'class="tick" style="display:block"') : ""}</button>`).join("")}
-        ${S.showAll ? "" : `<button type="button" class="wchip more" id="moreWork">More</button>`}</div></section>
+        </div></section>
+        <details class="tailor worked" ${wl.length ? "open" : ""}><summary><span><b>Other countries you’ve worked in</b> <span class="muted">(optional)</span><span class="muted" style="display:block;font-size:15px">${wl.length ? esc(wl.join(", ")) : "Adds familiar ground to your map"}</span></span>${CHEV}</summary>
+        <div class="in"><div class="chiprow">${Object.keys(COUNTRIES).filter(c => c !== S.home && c !== S.target).sort().map(c => `<button type="button" class="wchip" data-worked="${esc(c)}" aria-pressed="${S.worked.includes(c)}"><b>${CODES[c] || ""}</b>${esc(c)}</button>`).join("")}</div></div></details>
         ${S.home ? mapCard("Starting point loaded. Adjust it if it doesn’t fit you.") : ""}</div>
-        <aside class="deskmap" aria-label="Your map"><h2>Your map</h2><p class="muted" style="font-size:15px;margin:4px 0 10px">${S.home ? `Loaded from ${esc(S.home)} → ${esc(S.target)}. Drag any marker that doesn’t fit how you work.` : "Choose where you’re from to load a starting point."}</p>
+        <aside class="deskmap" aria-label="Your map"><h2>Your map</h2><p class="muted" style="font-size:15px;margin:4px 0 10px">${S.home ? `Loaded from ${esc(S.home)}${wl.length ? ` + your time in ${esc(wl.join(", "))}` : ""} → ${esc(S.target)}. Drag any marker that doesn’t fit you.` : "Choose where you’re from to load a starting point."}</p>
         <div class="legend" aria-hidden="true" style="background:#fff"><span><i class="you"></i>You</span><span><i class="dia"></i>${esc(tShort())} workplace</span></div>${sliders()}
         ${Object.keys(S.overrides).length ? `<p style="margin-top:8px"><button type="button" class="link" id="resetMap">Reset to the starting point</button></p>` : ""}
         <p class="note" style="margin-top:8px">1–7 scales paraphrased from Erin Meyer’s eight dimensions. Starting estimates, not facts about you.</p></aside></div>`,
         cta: "Continue", ok: !!S.home, sub: "Set up once. We’ll remember it on this device.", next: () => go("moment") }; },
     map: () => { const h = homeVals(), t = targetVals();
-      return { html: q("Does this sound like you?", `We loaded ${esc(!S.home || S.home === NOT_LISTED ? "the middle of each scale" : S.home)} as a starting point. Drag any marker that doesn’t fit how you work.`) +
+      return { html: q("Your map", "Change any country and watch the map shift. Drag a marker if it doesn’t fit you.") + mapControls() +
         `<div class="legend" aria-hidden="true"><span><i class="you"></i>You</span><span><i class="dia"></i>${esc(tShort())} workplace</span></div>${sliders()}
           ${Object.keys(S.overrides).length ? `<p style="margin-top:8px"><button type="button" class="link" id="resetMap">Reset to the starting point</button></p>` : ""}`,
         cta: "Save my map", ok: true, sub: "Optional. Your map shapes every answer.", next: () => go(S.returnTo || "setup") }; },
@@ -555,21 +600,21 @@ What happened: ${S.story}`;
         cta: "Build my plan", ok, sub: ok ? "" : "Write a sentence or two to continue.", next: buildPlan }; },
     observe: () => { const top = rank(S.scenario).slice(0, 3), mx = Math.max(...top.map(g => g.score), 1), cols = ["var(--vio)", "var(--mint-d)", "var(--pink-d)"];
       return { html: `<div class="space"><svg class="motif" width="230" height="230" viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(0 3)" fill="none" stroke="#2A4A58" stroke-width="1.6" stroke-linejoin="round"><path d="M8 1.2 H32.4 A6.8 6.8 0 0 1 39.2 8 V28 A6.8 6.8 0 0 1 32.4 34.8 H15 L2.4 43 V8 A6.8 6.8 0 0 1 8 1.2 Z"/><path d="M27.4 13.8 H56 A6.8 6.8 0 0 1 62.8 20.6 V59.5 L48.5 47.8 H27.4 A6.8 6.8 0 0 1 20.6 41 V20.6 A6.8 6.8 0 0 1 27.4 13.8 Z"/></g></svg>
-        ${loopHTML("Observe")}<h1 id="vt" tabindex="-1">What’s different in this context</h1><p>Observed from your map, before any advice is written.</p></div>
-        <ol class="bars">${top.map((g, i) => `<li><div class="r"><b>${g.name}</b><span>gap ${g.abs}${g.weight > 1 ? `, key for ${esc(S.scenario)}` : ""}</span></div><div class="bar"><i style="width:${(g.score / mx * 100).toFixed(0)}%;background:${cols[i]};animation-delay:${i * .15}s"></i></div></li>`).join("")}</ol>
-        ${S.planError ? `<div class="status" role="alert"><p class="error">${esc(S.planError)}</p></div>` : `<div class="status" role="status"><svg class="spin" width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="14" fill="none" stroke="#DCE4E8" stroke-width="4"/><path d="M18 4a14 14 0 0114 14" fill="none" stroke="#9053E9" stroke-width="4" stroke-linecap="round"/></svg><div><b>Writing your plan…</b><p class="muted" style="font-size:14px">Opens automatically · usually under a minute</p></div></div>`}`,
+        ${loopHTML("Observe")}<h1 id="vt" tabindex="-1">What’s different in this context</h1><p>From your map, before any advice.</p></div>
+        <ol class="bars">${top.map((g, i) => `<li><div class="r"><b>${g.name}</b><span class="gapn">Gap ${g.abs}${g.weight > 1 ? ` <i class="key">Key</i>` : ""}</span></div>${familiar(g).length ? `<p class="fam">Familiar from ${esc(familiar(g).join(", "))}</p>` : ""}<div class="bar"><i style="width:${(g.score / mx * 100).toFixed(0)}%;background:${cols[i]};animation-delay:${i * .15}s"></i></div></li>`).join("")}</ol>
+        ${S.planError ? `<div class="status" role="alert"><p class="error">${esc(S.planError)}</p></div>` : `<div class="status" role="status"><svg class="spin" width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="14" fill="none" stroke="#DCE4E8" stroke-width="4"/><path d="M18 4a14 14 0 0114 14" fill="none" stroke="#9053E9" stroke-width="4" stroke-linecap="round"/></svg><div><b>Writing your plan…</b><p class="muted">Opens automatically</p></div></div>`}`,
         cta: S.planError ? "Try again" : null, ok: true, next: buildPlan }; },
     plan: () => { const p = S.plan, top = S.top, gaps = (p.gaps || []).slice(0, 3), scen = SCENARIOS.find(s => s.v === S.scenario)?.name || "";
       const match = n => { const x = String(n || "").toLowerCase(); return rank(S.scenario).find(g => x.includes(g.name.toLowerCase()) || g.name.toLowerCase().includes(x.split(" ")[0])); };
-      return { html: `<div class="plan-top">${loopHTML("Understand")}<p class="kicker">Your plan · ${esc(S.home || NOT_LISTED)} → ${esc(tShort())}${scen ? " · " + esc(scen) : ""}</p>
+      return { html: `<div class="plan-top">${loopHTML("Understand")}<p class="kicker">Your plan · ${esc(S.home || NOT_LISTED)} → ${esc(tShort())}${scen ? " · " + esc(scen) : ""} · <button type="button" class="link" id="editMap">Edit map</button></p>
         <h1 class="plan-title" id="vt" tabindex="-1">${esc(p.headline || "Make meaning click.")}</h1>
-        <ul class="why" aria-label="Why these gaps">${top.map((g, i) => `<li class="c${i}">${esc(g.name)} · gap ${g.abs}${g.weight > 1 ? `, key for ${esc(S.scenario)}` : ""}</li>`).join("")}</ul>
+        <ul class="why" aria-label="Why these gaps">${top.map((g, i) => `<li class="c${i}">${esc(g.name)} · Gap ${g.abs}${g.weight > 1 ? " · Key" : ""}</li>`).join("")}</ul>
         ${S.demo === "fallback" ? `<p class="demo">The coach was busy, so this plan uses built-in examples for your top gaps. Try again in a minute for a personal plan.</p>` : S.demo ? `<p class="demo">Demo mode: this plan is written from built-in examples for your top gaps. Connect a coach service for personal, live answers.</p>` : ""}
         ${p.swap_note ? `<p class="small-status">${esc(p.swap_note)}</p>` : ""}</div>
         <div class="gtabs" role="tablist" aria-label="Your gaps">${gaps.map((g, i) => `<button role="tab" class="c${i}" id="gt${i}" aria-controls="gp${i}" aria-selected="${S.tab === i}" tabindex="${S.tab === i ? 0 : -1}" data-tab="${i}">${esc(g.dimension)}</button>`).join("")}</div>
         <div class="gcards">${gaps.map((g, i) => { const m = match(g.dimension); return `<section class="gcard c${i} ${S.tab === i ? "" : "off"}" role="tabpanel" id="gp${i}" aria-labelledby="gt${i}"><h2>${esc(g.dimension)}</h2>
-          ${m ? `<div class="gmeta"><span>You ${m.home} · ${esc(tShort())} ${m.target} · gap ${m.abs}</span>${i === 0 ? '<span class="tag gap">Biggest gap</span>' : ""}</div><div class="mini" aria-hidden="true"><span class="ml"></span><span class="md" style="left:${pos(m.target) * 100}%"></span><span class="my" style="left:${pos(m.home) * 100}%"></span></div>` : ""}
-          <div><p class="lbl">Observe</p><p class="txt">${esc(g.notice)}</p></div>
+          ${m ? `<div class="gmeta"><span>You <b>${m.home}</b> · ${esc(tShort())} <b>${m.target}</b> · Gap <b>${m.abs}</b></span>${i === 0 ? '<span class="tag gap">Biggest gap</span>' : ""}</div><div class="mini" aria-hidden="true"><span class="ml"></span><span class="md" style="left:${pos(m.target) * 100}%"></span><span class="my" style="left:${pos(m.home) * 100}%"></span></div>` : ""}
+          ${m && familiar(m).length ? `<p class="fam">You may recognize this from ${esc(familiar(m).join(", "))}.</p>` : ""}<div><p class="lbl">Observe</p><p class="txt">${esc(g.notice)}</p></div>
           <div><p class="lbl">How it may be heard</p><p class="txt">${esc(g.heard)}</p></div>
           <div class="say"><p class="lbl">Respond: try saying</p>${(g.scripts || []).map(s => `<p class="line">“${esc(String(s).replace(/^["“]|["”]$/g, ""))}”</p>`).join("")}</div>
           <div class="watch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B83468" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg><p><b style="color:var(--ink)">Watch for:</b> ${esc(g.watch_for)}</p></div></section>`; }).join("")}</div>
@@ -583,14 +628,11 @@ What happened: ${S.story}`;
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px"><button class="btn ghost small" type="button" id="sharePlan">Save or share</button><button class="btn ghost small" type="button" id="newMoment">Plan another moment</button><span class="small-status" id="copyStatus" role="status"></span></div>`,
         cta: null }; },
     practice: () => chatView("practice", S.practiceTitle, "Answer in your own words…"),
-    coach: () => ({ html: `<div class="q"><h1 id="vt" tabindex="-1">Ask about a real moment</h1><p>Quick questions about a moment at work. Your map shapes every answer.</p><p class="muted" style="font-size:15px">Need more than a quick answer? <button type="button" class="link" id="toPlan">Build a plan</button></p></div>
-      <div class="coachgrid"><div class="tips"><b>For the best answer, include:</b><ol>
-      <li><span class="n">1</span><span><b style="display:block">What happened</b><span class="muted">What you saw and heard, not what you think it meant.</span></span></li>
-      <li><span class="n">2</span><span><b style="display:block">Who was there</b><span class="muted">Your manager, peers, a client, a big group or one person.</span></span></li>
-      <li><span class="n">3</span><span><b style="display:block">What you want next</b><span class="muted">To repair a moment, prepare for one, or just understand it.</span></span></li></ol>
-      <p class="note">No names or confidential details needed.</p></div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-top:18px"><b>Or start from an example</b><div class="examples">${EXAMPLES.map(([t, x], i) => `<button type="button" class="ex" data-ex="${i}"><span class="tg">${t}</span><span>${esc(x)}</span></button>`).join("")}</div></div></div>
-      <form class="composer" id="composer" style="margin-top:20px"><label for="msg" class="sr">Ask the coach</label><textarea id="msg" rows="1" placeholder="Describe your moment: what happened, who was there, what you want next…"></textarea><button class="send" id="sendBtn" type="submit" aria-label="Send" disabled>${SEND}</button></form>`, cta: null }),
+    coach: () => ({ html: `<div class="q"><h1 id="vt" tabindex="-1">Ask the coach</h1><p>Your map shapes every answer.</p></div>
+      <form class="composer big" id="composer"><label for="msg" class="sr">Describe your moment</label><textarea id="msg" rows="3" placeholder="What happened, who was there, and what do you want next?"></textarea><button class="send" id="sendBtn" type="submit" aria-label="Send" disabled>${SEND}</button></form>
+      <p class="muted" style="margin-top:8px">Say what you saw and heard. No names needed.</p>
+      <div class="tryrow"><span class="muted">Try:</span>${TRY.map(([lab, i]) => `<button type="button" class="trychip" data-ex="${i}">${esc(lab)}</button>`).join("")}</div>
+      <p class="muted" style="margin-top:22px">Need more than a quick answer? <button type="button" class="link" id="toPlan">Build a plan</button></p>`, cta: null }),
     coachChat: () => chatView("coach", "Ask the coach", "Ask a follow-up…"),
   };
   const SEND = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#173440" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>';
@@ -643,7 +685,10 @@ What happened: ${S.story}`;
     on("#openLast", () => { Object.assign(S, { plan: S.last.plan, top: S.last.top, scenario: S.last.scenario, demo: S.last.demo, tab: 0 }); go("plan"); });
     on("#mapCard", () => { S.returnTo = S.view; go("map"); });
     on("#panelAdjust", () => { S.returnTo = S.view === "map" ? S.returnTo : S.view; go("map"); });
-    on("#moreWork", () => { S.showAll = true; render(); });
+    on("#editMap", () => { S.returnTo = "plan"; go("map"); });
+    const sh = $("#selHome"); if (sh) sh.onchange = () => { if (S.home !== sh.value) S.overrides = {}; S.home = sh.value; persist(); render(); $("#selHome")?.focus(); };
+    const sw = $("#selWork"); if (sw) sw.onchange = () => { S.target = sw.value; persist(); render(); $("#selWork")?.focus(); };
+    document.querySelectorAll("[data-worked]").forEach(b => b.onclick = () => { const c = b.dataset.worked; S.worked = S.worked.includes(c) ? S.worked.filter(x => x !== c) : [...S.worked, c]; persist(); render(); document.querySelector(`[data-worked="${CSS.escape(c)}"]`)?.focus(); });
     on("#resetMap", () => { S.overrides = {}; persist(); render(); });
     on("#toPlan", () => go(S.home ? "moment" : "setup"));
     on("#askAfter", () => go("coach"));
